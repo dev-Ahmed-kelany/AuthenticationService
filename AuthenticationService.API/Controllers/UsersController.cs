@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AuthenticationService.Business;
 using Microsoft.AspNetCore.Http.HttpResults;
+using AuthenticationService.Repository;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -28,5 +29,22 @@ namespace AuthenticationService.API.Controllers
             return Ok(clsUser.DeleteUserByID(ID));
         }
 
+        [HttpGet("Search")]
+        public ActionResult<List<UserDTO>> SearchUsers(string SearchText)
+        {
+            return Ok(clsUser.SearchUsers(SearchText));
+        }
+
+        [HttpGet("Filter/Role/{RoleID}")]
+        public ActionResult<List<UserDTO>> FilterUsersByRoleID(int RoleID)
+        {
+            return Ok(clsUser.FilterUsersByRoleID(RoleID));
+        }
+
+        [HttpGet("Filter/Status/{StatusID}")]
+        public ActionResult<List<UserDTO>> FilterUsersByStatusID(int StatusID)
+        {
+            return Ok(clsUser.FilterUsersByStatusID(StatusID));
+        }
     }
 }

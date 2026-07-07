@@ -21,5 +21,21 @@ namespace AuthenticationService.Business
         {
             return clsUserRepository.DeleteUserByID(ID);
         }
+
+        public static List<UserDTO> SearchUsers(string SearchText)
+        {
+            return clsUserRepository.SearchUsers(SearchText);
+        }
+
+        public static List<UserDTO> FilterUsersByRoleID(int RoleID)
+        {
+            return clsUserRepository.FilterUsersByRoleID(RoleID);
+        }
+
+        public static List<UserDTO> FilterUsersByStatusID(int StatusID)
+        {
+            return clsUserRepository.FilterUsersByStatusID(StatusID);
+        }
+
     }
 }
