@@ -16,5 +16,10 @@ namespace AuthenticationService.Business
         {
             return clsUserRepository.UpdateUserByID(ID, Name, Username, Email, RoleID, StatusID);
         }
+
+        public static bool DeleteUserByID(int ID)
+        {
+            return clsUserRepository.DeleteUserByID(ID);
+        }
     }
 }

@@ -22,5 +22,11 @@ namespace AuthenticationService.API.Controllers
             return Ok(clsUser.UpdateUserByID(ID, Name, Username, Email, RoleID, StatusID));
         }
 
+        [HttpDelete("{ID}", Name = "DeleteUserByID")]
+        public ActionResult<bool> DeleteUserByID(int ID)
+        {
+            return Ok(clsUser.DeleteUserByID(ID));
+        }
+
     }
 }

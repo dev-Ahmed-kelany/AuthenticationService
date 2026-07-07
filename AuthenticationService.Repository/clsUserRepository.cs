@@ -81,5 +81,35 @@ namespace AuthenticationService.Repository
                 }
             }
         }
+
+        public static bool DeleteUserByID(int ID)
+        {
+            const string Query = "SP_DeleteUserByID";
+
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand(Query, Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    //-- Input Parameter --//
+                    Command.Parameters.AddWithValue("@UserID", ID);
+
+                    //-- Output Parameter --//
+                    SqlParameter OutputRowsAffected = new SqlParameter("@RowsAffected", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+
+                    Command.Parameters.Add(OutputRowsAffected);
+
+                    Connection.Open();
+
+                    Command.ExecuteNonQuery();
+
+                    return (int)OutputRowsAffected.Value == 1;
+                }
+            }
+        }
     }
 }
