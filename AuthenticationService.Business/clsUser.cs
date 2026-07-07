@@ -10,5 +10,11 @@ namespace AuthenticationService.Business
         {
             return clsUserRepository.AddNewUser(Name, Username, Email, PasswordHash, RoleID, StatusID);
         }
+
+        public static bool UpdateUserByID(int ID, string Name, string Username, string Email
+            , int RoleID, int StatusID)
+        {
+            return clsUserRepository.UpdateUserByID(ID, Name, Username, Email, RoleID, StatusID);
+        }
     }
 }

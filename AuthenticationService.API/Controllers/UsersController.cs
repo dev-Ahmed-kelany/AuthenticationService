@@ -14,5 +14,13 @@ namespace AuthenticationService.API.Controllers
         {
             return Ok(clsUser.AddNewUser(Name, Username, Email, PasswordHash, RoleID, StatusID));
         }
+
+        [HttpPut("{ID}", Name = "UpdateUserByID")]
+        public ActionResult<bool> UpdateUserByID(int ID, string Name, string Username, string Email,
+            int RoleID, int StatusID)
+        {
+            return Ok(clsUser.UpdateUserByID(ID, Name, Username, Email, RoleID, StatusID));
+        }
+
     }
 }
