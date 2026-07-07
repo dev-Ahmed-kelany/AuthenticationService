@@ -235,5 +235,74 @@ namespace AuthenticationService.Repository
 
             return Users;
         }
+
+        public static List<UserDTO> GetAllUsers()
+        {
+            List<UserDTO> Users = new List<UserDTO>();
+
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand("SP_GetAllUsers", Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    Connection.Open();
+
+                    using (SqlDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            UserDTO User = new UserDTO();
+
+                            User.ID = (int)Reader["ID"];
+                            User.Name = (string)Reader["Name"];
+                            User.Username = (string)Reader["Username"];
+                            User.Email = (string)Reader["Email"];
+                            User.RoleID = (int)Reader["RoleID"];
+                            User.StatusID = (int)Reader["StatusID"];
+                            User.CreatedAt = (DateTime)Reader["CreatedAt"];
+
+                            Users.Add(User);
+                        }
+                    }
+                }
+            }
+
+            return Users;
+        }
+
+        public static UserDTO? GetUserByID(int ID)
+        {
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand("SP_GetUserByID", Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    Command.Parameters.AddWithValue("@UserID", ID);
+
+                    Connection.Open();
+
+                    using (SqlDataReader Reader = Command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            return new UserDTO
+                            {
+                                ID = (int)Reader["ID"],
+                                Name = (string)Reader["Name"],
+                                Username = (string)Reader["Username"],
+                                Email = (string)Reader["Email"],
+                                RoleID = (int)Reader["RoleID"],
+                                StatusID = (int)Reader["StatusID"],
+                                CreatedAt = (DateTime)Reader["CreatedAt"]
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 }

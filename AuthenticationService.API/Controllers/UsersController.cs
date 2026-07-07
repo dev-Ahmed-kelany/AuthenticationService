@@ -46,5 +46,22 @@ namespace AuthenticationService.API.Controllers
         {
             return Ok(clsUser.FilterUsersByStatusID(StatusID));
         }
+
+        [HttpGet]
+        public ActionResult<List<UserDTO>> GetAllUsers()
+        {
+            return Ok(clsUser.GetAllUsers());
+        }
+
+        [HttpGet("{ID}", Name = "GetUserByID")]
+        public ActionResult<UserDTO> GetUserByID(int ID)
+        {
+            UserDTO? User = clsUser.GetUserByID(ID);
+
+            if (User == null)
+                return NotFound();
+
+            return Ok(User);
+        }
     }
 }

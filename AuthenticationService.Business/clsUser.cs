@@ -37,5 +37,15 @@ namespace AuthenticationService.Business
             return clsUserRepository.FilterUsersByStatusID(StatusID);
         }
 
+        public static List<UserDTO> GetAllUsers()
+        {
+            return clsUserRepository.GetAllUsers();
+        }
+
+        public static UserDTO? GetUserByID(int ID)
+        {
+            return clsUserRepository.GetUserByID(ID);
+        }
+
     }
 }
