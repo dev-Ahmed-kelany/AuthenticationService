@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AuthenticationService.Business\AuthenticationService.Business.csproj" />
   </ItemGroup>
 
