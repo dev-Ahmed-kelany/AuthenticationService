@@ -117,6 +117,36 @@ namespace AuthenticationService.Repository
             return Roles;
         }
 
+        public static RoleDTO? GetRoleByID(int ID)
+        {
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand("SP_GetRoleByID", Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    Command.Parameters.AddWithValue("@ID", ID);
+
+                    Connection.Open();
+
+                    using (SqlDataReader Reader = Command.ExecuteReader())
+                    {
+                        if (Reader.Read())
+                        {
+                            return new RoleDTO
+                            {
+                                ID = (int)Reader["ID"],
+                                Name = (string)Reader["Name"],
+                                PermissionsMask = (long)Reader["PermissionsMask"]
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
 
     }
 }

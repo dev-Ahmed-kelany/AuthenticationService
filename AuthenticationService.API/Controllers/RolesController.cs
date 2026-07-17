@@ -26,5 +26,16 @@ namespace AuthenticationService.API.Controllers
         {
             return Ok(clsRole.SearchRolesByName(SearchText));
         }
+
+        [HttpGet("{ID}", Name = "GetRoleByID")]
+        public ActionResult<RoleDTO> GetRoleByID(int ID)
+        {
+            RoleDTO? Role = clsRole.GetRoleByID(ID);
+
+            if (Role == null)
+                return NotFound();
+
+            return Ok(Role);
+        }
     }
 }
