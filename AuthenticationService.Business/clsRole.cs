@@ -27,6 +27,11 @@ namespace AuthenticationService.Business
         {
             return clsRoleRepository.GetRoleByID(ID);
         }
+        public static List<RoleDTO> GetAllRoles()
+        {
+            return clsRoleRepository.GetAllRoles();
+        }
+
 
     }
 }

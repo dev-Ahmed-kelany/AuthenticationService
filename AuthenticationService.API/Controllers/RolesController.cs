@@ -37,5 +37,11 @@ namespace AuthenticationService.API.Controllers
 
             return Ok(Role);
         }
+
+        [HttpGet]
+        public ActionResult<List<RoleDTO>> GetAllRoles()
+        {
+            return Ok(clsRole.GetAllRoles());
+        }
     }
 }

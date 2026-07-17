@@ -147,6 +147,36 @@ namespace AuthenticationService.Repository
             return null;
         }
 
+        public static List<RoleDTO> GetAllRoles()
+        {
+            List<RoleDTO> Roles = new List<RoleDTO>();
+
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand("SP_GetAllRoles", Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    Connection.Open();
+
+                    using (SqlDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            RoleDTO Role = new RoleDTO();
+
+                            Role.ID = (int)Reader["ID"];
+                            Role.Name = (string)Reader["Name"];
+                            Role.PermissionsMask = (long)Reader["PermissionsMask"];
+
+                            Roles.Add(Role);
+                        }
+                    }
+                }
+            }
+
+            return Roles;
+        }
 
     }
 }
