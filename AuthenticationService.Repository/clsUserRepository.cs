@@ -305,11 +305,7 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static bool GetAuthenticationUserByUsername
-(
-    string Username,
-    ref AuthenticationUserDTO User
-)
+        public static bool GetAuthenticationUserByUsername( string Username, ref AuthenticationUserDTO User )
         {
             bool IsFound = false;
 
