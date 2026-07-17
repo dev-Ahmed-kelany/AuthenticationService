@@ -18,5 +18,10 @@ namespace AuthenticationService.Business
             return clsRoleRepository.UpdateRoleByID(ID, Name, PermissionsMask);
         }
 
+        public static List<RoleDTO> SearchRolesByName(string SearchText)
+        {
+            return clsRoleRepository.SearchRolesByName(SearchText);
+        }
+
     }
 }

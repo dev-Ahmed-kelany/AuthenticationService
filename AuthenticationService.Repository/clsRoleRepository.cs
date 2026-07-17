@@ -10,7 +10,7 @@ namespace AuthenticationService.Repository
 {
     public class RoleDTO
     {
-        public int RoleID { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; } = null!;
         public long PermissionsMask { get; set; }
     }
@@ -82,6 +82,39 @@ namespace AuthenticationService.Repository
 
                 }
             }
+        }
+
+        public static List<RoleDTO> SearchRolesByName(string SearchText)
+        {
+            List<RoleDTO> Roles = new List<RoleDTO>();
+
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand("SP_SearchRolesByName", Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    Command.Parameters.AddWithValue("@SearchText", SearchText);
+
+                    Connection.Open();
+
+                    using (SqlDataReader Reader = Command.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            RoleDTO Role = new RoleDTO();
+
+                            Role.ID = (int)Reader["ID"];
+                            Role.Name = (string)Reader["Name"];
+                            Role.PermissionsMask = (long)Reader["PermissionsMask"];
+
+                            Roles.Add(Role);
+                        }
+                    }
+                }
+            }
+
+            return Roles;
         }
 
 

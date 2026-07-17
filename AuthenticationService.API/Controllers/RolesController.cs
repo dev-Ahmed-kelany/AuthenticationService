@@ -1,4 +1,5 @@
 ﻿using AuthenticationService.Business;
+using AuthenticationService.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,12 @@ namespace AuthenticationService.API.Controllers
         public ActionResult<bool> UpdateRoleByID(int ID, string Name, long PermissionsMask)
         {
             return Ok(clsRole.UpdateRoleByID(ID, Name, PermissionsMask));
+        }
+
+        [HttpGet("Search")]
+        public ActionResult<List<RoleDTO>> SearchRolesByName(string SearchText)
+        {
+            return Ok(clsRole.SearchRolesByName(SearchText));
         }
     }
 }
