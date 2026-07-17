@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
-    public enum enLoginResult
+    public enum enAuthenticationResult
     {
         Success = 1,
         InvalidCredentials = 2,
@@ -19,32 +19,56 @@ namespace AuthenticationService.Business
 
     public class clsAuthentication
     {
-        
 
-        public static enLoginResult Login(string Username, string Password)
+        private static enAuthenticationResult AuthenticateUser(string Username,
+                                                  string Password,
+                                                  ref AuthenticationUserDTO User)
         {
-            AuthenticationUserDTO User = new AuthenticationUserDTO();
+            bool IsFound = clsAuthenticationRepository.GetAuthenticationUserByUsername(Username, ref User);
 
-            bool IsFound = clsUserRepository.GetAuthenticationUserByUsername(Username, ref User);
+            if (!IsFound)
+                return enAuthenticationResult.InvalidCredentials;
 
-            if (!IsFound) return enLoginResult.InvalidCredentials;
-            if (Password != User.PasswordHash) return enLoginResult.InvalidCredentials;
-            if (User.StatusID != 1) return enLoginResult.InactiveAccount;
+            if (Password != User.PasswordHash)
+                return enAuthenticationResult.InvalidCredentials;
 
-            return enLoginResult.Success;
+            if (User.StatusID != 1)
+                return enAuthenticationResult.InactiveAccount;
+
+            return enAuthenticationResult.Success;
         }
 
-        public static enLoginResult VerifyCredentials(string Username, string Password)
+        public static enAuthenticationResult Login(string Username, string Password)
         {
             AuthenticationUserDTO User = new AuthenticationUserDTO();
 
-            bool IsFound = clsUserRepository.GetAuthenticationUserByUsername(Username, ref User);
+            return AuthenticateUser(Username, Password, ref User);
+        }
 
-            if (!IsFound) return enLoginResult.InvalidCredentials;
-            if (Password != User.PasswordHash) return enLoginResult.InvalidCredentials;
-            if (User.StatusID != 1) return enLoginResult.InactiveAccount;
+        public static enAuthenticationResult VerifyCredentials(string Username, string Password)
+        {
+            AuthenticationUserDTO User = new AuthenticationUserDTO();
 
-            return enLoginResult.Success;
+            return AuthenticateUser(Username, Password, ref User);
+        }
+
+        public static enAuthenticationResult ChangePassword(string Username,
+                                                   string CurrentPassword,
+                                                   string NewPassword)
+        {
+            AuthenticationUserDTO User = new AuthenticationUserDTO();
+
+            enAuthenticationResult Result = AuthenticateUser(Username, CurrentPassword, ref User);
+
+            if (Result != enAuthenticationResult.Success)
+                return Result;
+
+            bool IsChanged = clsAuthenticationRepository.ChangePassword(User.ID, NewPassword);
+
+            if (!IsChanged)
+                return enAuthenticationResult.InvalidCredentials;
+
+            return enAuthenticationResult.Success;
         }
     }
 }

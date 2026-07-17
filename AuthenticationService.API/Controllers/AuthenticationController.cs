@@ -12,15 +12,15 @@ namespace AuthenticationService.API.Controllers
         [HttpPost("login")]
         public ActionResult Login(string Username,  string Password)
         {
-            enLoginResult LoginResult = clsAuthentication.Login(Username, Password);
+            enAuthenticationResult LoginResult = clsAuthentication.Login(Username, Password);
 
             switch (LoginResult)
             {
-                case enLoginResult.Success:
+                case enAuthenticationResult.Success:
                     return Ok();
-                case enLoginResult.InvalidCredentials:
+                case enAuthenticationResult.InvalidCredentials:
                     return BadRequest("Invalid Credentials.");
-                case enLoginResult.InactiveAccount:
+                case enAuthenticationResult.InactiveAccount:
                     return BadRequest("Account is inactive.");
                 default:
                     return BadRequest();
@@ -30,15 +30,33 @@ namespace AuthenticationService.API.Controllers
         [HttpPost("verify-credentials")]
         public ActionResult VerifyCredentials(string Username, string Password)
         {
-            enLoginResult VerifyCredentialsResult = clsAuthentication.VerifyCredentials(Username, Password);
+            enAuthenticationResult VerifyCredentialsResult = clsAuthentication.VerifyCredentials(Username, Password);
 
             switch (VerifyCredentialsResult)
             {
-                case enLoginResult.Success:
+                case enAuthenticationResult.Success:
                     return Ok();
-                case enLoginResult.InvalidCredentials:
+                case enAuthenticationResult.InvalidCredentials:
                     return BadRequest("Invalid Credentials.");
-                case enLoginResult.InactiveAccount:
+                case enAuthenticationResult.InactiveAccount:
+                    return BadRequest("Account is inactive.");
+                default:
+                    return BadRequest();
+            }
+        }
+
+        [HttpPost("change-password")]
+        public ActionResult ChangePassword(string Username, string CurrentPassword, string NewPassword)
+        {
+            enAuthenticationResult ChangePasswordResult = clsAuthentication.ChangePassword(Username, CurrentPassword, NewPassword);
+
+            switch (ChangePasswordResult)
+            {
+                case enAuthenticationResult.Success:
+                    return Ok();
+                case enAuthenticationResult.InvalidCredentials:
+                    return BadRequest("Invalid Credentials.");
+                case enAuthenticationResult.InactiveAccount:
                     return BadRequest("Account is inactive.");
                 default:
                     return BadRequest();
