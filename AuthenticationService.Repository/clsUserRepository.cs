@@ -304,5 +304,49 @@ namespace AuthenticationService.Repository
 
             return null;
         }
+
+        public static bool GetAuthenticationUserByUsername
+(
+    string Username,
+    ref AuthenticationUserDTO User
+)
+        {
+            bool IsFound = false;
+
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand("SP_GetAuthenticationUserByUsername", Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    Command.Parameters.AddWithValue("@Username", Username);
+
+                    try
+                    {
+                        Connection.Open();
+
+                        using (SqlDataReader Reader = Command.ExecuteReader())
+                        {
+                            if (Reader.Read())
+                            {
+                                IsFound = true;
+
+                                User.ID = (int)Reader["ID"];
+                                User.Username = (string)Reader["Username"];
+                                User.PasswordHash = (string)Reader["PasswordHash"];
+                                User.RoleID = (int)Reader["RoleID"];
+                                User.StatusID = (int)Reader["StatusID"];
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        IsFound = false;
+                    }
+                }
+            }
+
+            return IsFound;
+        }
     }
 }
