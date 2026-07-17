@@ -13,5 +13,11 @@ namespace AuthenticationService.API.Controllers
         {
             return Ok(clsRole.AddNewRole(Name, PermissionsMask));
         }
+
+        [HttpPut("{ID}", Name = "UpdateRoleByID")]
+        public ActionResult<bool> UpdateRoleByID(int ID, string Name, long PermissionsMask)
+        {
+            return Ok(clsRole.UpdateRoleByID(ID, Name, PermissionsMask));
+        }
     }
 }

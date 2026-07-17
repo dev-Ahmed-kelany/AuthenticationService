@@ -49,5 +49,41 @@ namespace AuthenticationService.Repository
                 }
             }
         }
+
+        public static bool UpdateRoleByID(int ID, string Name, long PermissionsMask)
+        {
+            string Query = "SP_UpdateRoleByID";
+
+            using (SqlConnection Connection = new SqlConnection(clsSettings.ConnectionString))
+            {
+                using (SqlCommand Command = new SqlCommand(Query, Connection))
+                {
+                    Command.CommandType = CommandType.StoredProcedure;
+
+                    //-- Add Parameters --//
+                    Command.Parameters.AddWithValue("@ID", ID);
+                    Command.Parameters.AddWithValue("@Name", Name);
+                    Command.Parameters.AddWithValue("@PermissionsMask", PermissionsMask);
+
+                    //-- Add Output Parameter --//
+                    SqlParameter OutputRowsAffected = new SqlParameter("@RowsAffected", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    Command.Parameters.Add(OutputRowsAffected);
+
+                    Connection.Open();
+
+                    Command.ExecuteNonQuery();
+
+                    int RowsAffected = (int)Command.Parameters["@RowsAffected"].Value;
+
+                    return RowsAffected == 1;
+
+                }
+            }
+        }
+
+
     }
 }

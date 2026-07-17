@@ -13,5 +13,10 @@ namespace AuthenticationService.Business
         {
             return clsRoleRepository.AddNewRole(Name, PermissionsMask);
         }
+        public static bool UpdateRoleByID(int ID, string Name, long PermissionsMask)
+        {
+            return clsRoleRepository.UpdateRoleByID(ID, Name, PermissionsMask);
+        }
+
     }
 }
