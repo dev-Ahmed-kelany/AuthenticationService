@@ -33,5 +33,18 @@ namespace AuthenticationService.Business
 
             return enLoginResult.Success;
         }
+
+        public static enLoginResult VerifyCredentials(string Username, string Password)
+        {
+            AuthenticationUserDTO User = new AuthenticationUserDTO();
+
+            bool IsFound = clsUserRepository.GetAuthenticationUserByUsername(Username, ref User);
+
+            if (!IsFound) return enLoginResult.InvalidCredentials;
+            if (Password != User.PasswordHash) return enLoginResult.InvalidCredentials;
+            if (User.StatusID != 1) return enLoginResult.InactiveAccount;
+
+            return enLoginResult.Success;
+        }
     }
 }
