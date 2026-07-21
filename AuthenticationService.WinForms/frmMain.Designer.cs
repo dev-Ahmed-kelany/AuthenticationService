@@ -28,18 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
+            lblTest = new Label();
             SuspendLayout();
+            // 
+            // lblTest
+            // 
+            lblTest.AutoSize = true;
+            lblTest.Font = new Font("Times New Roman", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblTest.Location = new Point(278, 169);
+            lblTest.Name = "lblTest";
+            lblTest.Size = new Size(136, 36);
+            lblTest.TabIndex = 0;
+            lblTest.Text = "AuditLog";
             // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1139, 575);
+            Controls.Add(lblTest);
             Name = "frmMain";
             Text = "Main";
+            Load += frmMain_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Label lblTest;
     }
 }

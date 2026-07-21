@@ -1,4 +1,4 @@
-﻿namespace AuthenticationService.Desktop.Models
+﻿namespace AuthenticationService.WinForms.Models
 {
     public class AuthenticationUserDTO
     {
