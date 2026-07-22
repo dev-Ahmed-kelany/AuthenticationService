@@ -12,8 +12,8 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post<boolean>(
+  login(username: string, password: string): Observable<void> {
+    return this.http.post<void>(
       `${this.apiUrl}/Login?Username=${encodeURIComponent(username)}&Password=${encodeURIComponent(password)}`,
       {},
     );
