@@ -9,12 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="LoginHistory\" />
-    <Folder Include="AuditLogs\" />
     <Folder Include="Controls\" />
-    <Folder Include="Permissions\" />
-    <Folder Include="Roles\" />
-    <Folder Include="Users\" />
   </ItemGroup>
 
 </Project>
