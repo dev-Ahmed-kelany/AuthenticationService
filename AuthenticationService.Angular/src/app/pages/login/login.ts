@@ -10,7 +10,7 @@ import { AuthenticationService } from '../../services/authentication.service';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class LoginComponent {
+export class Login {
   username = '';
   password = '';
 

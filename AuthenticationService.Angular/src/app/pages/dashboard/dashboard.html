@@ -1,1 +1,29 @@
-<p>dashboard.component works!</p>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <h2>Authentication Service</h2>
+
+    <hr />
+
+    <button routerLink="./">Dashboard</button>
+
+    <button routerLink="users">Users</button>
+
+    <button routerLink="roles">Roles</button>
+
+    <button routerLink="permissions">Permissions</button>
+
+    <button routerLink="profile">Profile</button>
+
+    <button routerLink="login-history">Login History</button>
+
+    <button routerLink="audit-logs">Audit Logs</button>
+
+    <hr />
+
+    <button routerLink="auth/login">Logout</button>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
