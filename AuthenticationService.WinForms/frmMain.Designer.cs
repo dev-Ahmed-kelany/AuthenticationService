@@ -29,23 +29,37 @@
         private void InitializeComponent()
         {
             lblTest = new Label();
+            btnLogin = new Button();
             SuspendLayout();
             // 
             // lblTest
             // 
             lblTest.AutoSize = true;
             lblTest.Font = new Font("Times New Roman", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblTest.Location = new Point(278, 169);
+            lblTest.Location = new Point(65, 68);
             lblTest.Name = "lblTest";
             lblTest.Size = new Size(136, 36);
             lblTest.TabIndex = 0;
             lblTest.Text = "AuditLog";
+            // 
+            // btnLogin
+            // 
+            btnLogin.AutoSize = true;
+            btnLogin.Font = new Font("Times New Roman", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnLogin.Location = new Point(487, 420);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(150, 46);
+            btnLogin.TabIndex = 5;
+            btnLogin.Text = "Logout";
+            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.Click += btnLogin_Click;
             // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1139, 575);
+            Controls.Add(btnLogin);
             Controls.Add(lblTest);
             Name = "frmMain";
             Text = "Main";
@@ -57,5 +71,6 @@
         #endregion
 
         private Label lblTest;
+        private Button btnLogin;
     }
 }
