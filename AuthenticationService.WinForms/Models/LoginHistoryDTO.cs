@@ -4,19 +4,21 @@
     {
         public int ID { get; set; }
 
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
 
-        public string UserName { get; set; } = string.Empty;
+        public string? Username { get; set; }
 
-        public string IPAddress { get; set; } = string.Empty;
-
-        public string Device { get; set; } = string.Empty;
-
-        public string Browser { get; set; } = string.Empty;
+        public string? Name { get; set; }
 
         public byte Status { get; set; }
 
-        public string FailureReason { get; set; } = string.Empty;
+        public string? FailureReason { get; set; }
+
+        public string? IPAddress { get; set; }
+
+        public string? Device { get; set; }
+
+        public string? Browser { get; set; }
 
         public DateTime DateTime { get; set; }
     }
