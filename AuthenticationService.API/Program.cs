@@ -9,11 +9,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngular", policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyOrigin()//WithOrigins("http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy
+            .WithOrigins(builder.Configuration
+                .GetSection("Cors:AllowedOrigins")
+                .Get<string[]>()!)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
