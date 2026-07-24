@@ -8,6 +8,6 @@ namespace AuthenticationService.Repository
 {
     public class clsSettings
     {
-        public static string ConnectionString = "Server=.;Database=AuthenticationService;Trusted_Connection=True;TrustServerCertificate=True;";
+        public static string ConnectionString { get; set; } = string.Empty;
     }
 }

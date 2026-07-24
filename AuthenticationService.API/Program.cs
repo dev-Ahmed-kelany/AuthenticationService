@@ -1,11 +1,29 @@
+using AuthenticationService.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Connection String
+clsSettings.ConnectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new()
+    {
+        Title = "Authentication Service API",
+        Version = "v1",
+        Description = "Authentication & Authorization Service",
+        Contact = new()
+        {
+            Name = "Ahmed Kelany"
+        }
+    });
+});
 
 builder.Services.AddCors(options =>
 {
@@ -19,6 +37,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
 
 
 var app = builder.Build();
