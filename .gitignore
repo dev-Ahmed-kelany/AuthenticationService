@@ -11,3 +11,17 @@
 # Build Results
 **/bin/
 **/obj/
+
+# Rider
+.idea/
+
+# Logs
+*.log
+
+# Publish output
+publish/
+
+# NuGet packages (if applicable)
+packages/
+
+.env
