@@ -1,5 +1,5 @@
 // environments/environment.ts
 
 export const environment = {
-  apiUrl: 'https://localhost:7044/api',
+  apiUrl: 'http://authservice-ak.runasp.net/api',
 };
