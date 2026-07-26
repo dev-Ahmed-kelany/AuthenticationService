@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Repository;
+﻿using AuthenticationService.Dtos.Authentication;
+using AuthenticationService.Repository;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
-    public enum enAuthenticationResult
+    public enum AuthenticationResult
     {
         Success = 1,
         InvalidCredentials = 2,
@@ -17,58 +18,62 @@ namespace AuthenticationService.Business
         DeletedAccount = 5
     }
 
+    public class LoginResult
+    {
+        public AuthenticationResult Result { get; set; }
+        public LoginResponseDto? LoginResponse { get; set; }
+    }
+
     public class Authentication
     {
 
-        private static enAuthenticationResult AuthenticateUser(string username,
+        private static AuthenticationResult AuthenticateUser(string username,
                                                   string password,
-                                                  ref AuthenticationUserDTO user)
+                                                  ref AuthenticationUserDto user)
         {
             bool IsFound = AuthenticationRepository.GetAuthenticationUserByUsername(username, ref user);
 
             if (!IsFound)
-                return enAuthenticationResult.InvalidCredentials;
+                return AuthenticationResult.InvalidCredentials;
 
             if (password != user.PasswordHash)
-                return enAuthenticationResult.InvalidCredentials;
+                return AuthenticationResult.InvalidCredentials;
 
             if (user.StatusID != 1)
-                return enAuthenticationResult.InactiveAccount;
+                return AuthenticationResult.InactiveAccount;
 
-            return enAuthenticationResult.Success;
+            return AuthenticationResult.Success;
         }
 
-        public static enAuthenticationResult Login(string username, string password)
+        public static AuthenticationResult Login(LoginRequestDto request)
         {
-            AuthenticationUserDTO user = new AuthenticationUserDTO();
+            AuthenticationUserDto user = new AuthenticationUserDto();
 
-            return AuthenticateUser(username, password, ref user);
+            return AuthenticateUser(request.Username, request.Password, ref user);
         }
 
-        public static enAuthenticationResult VerifyCredentials(string username, string password)
+        public static AuthenticationResult VerifyCredentials(LoginRequestDto request)
         {
-            AuthenticationUserDTO user = new AuthenticationUserDTO();
+            AuthenticationUserDto user = new AuthenticationUserDto();
 
-            return AuthenticateUser(username, password, ref user);
+            return AuthenticateUser(request.Username, request.Password, ref user);
         }
 
-        public static enAuthenticationResult ChangePassword(string username,
-                                                   string currentPassword,
-                                                   string newPassword)
+        public static AuthenticationResult ChangePassword(ChangePasswordDto request)
         {
-            AuthenticationUserDTO user = new AuthenticationUserDTO();
+            AuthenticationUserDto user = new AuthenticationUserDto();
 
-            enAuthenticationResult result = AuthenticateUser(username, currentPassword, ref user);
+            AuthenticationResult result = AuthenticateUser(request.Username, request.CurrentPassword, ref user);
 
-            if (result != enAuthenticationResult.Success)
+            if (result != AuthenticationResult.Success)
                 return result;
 
-            bool IsChanged = AuthenticationRepository.ChangePassword(user.ID, newPassword);
+            bool IsChanged = AuthenticationRepository.ChangePassword(user.ID, request.NewPassword);
 
             if (!IsChanged)
-                return enAuthenticationResult.InvalidCredentials;
+                return AuthenticationResult.InvalidCredentials;
 
-            return enAuthenticationResult.Success;
+            return AuthenticationResult.Success;
         }
     }
 }

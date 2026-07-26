@@ -1,39 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.LoginHistory;
 
 namespace AuthenticationService.Repository
 {
-    public class LoginHistoryDTO
-    {
-        public int ID { get; set; }
-
-        public int? UserID { get; set; }
-
-        public string? Username { get; set; }
-
-        public string? Name { get; set; }
-
-        public byte Status { get; set; }
-
-        public string? FailureReason { get; set; }
-
-        public string? IPAddress { get; set; }
-
-        public string? Device { get; set; }
-
-        public string? Browser { get; set; }
-
-        public DateTime DateTime { get; set; }
-    }
-
     public class LoginHistoryRepository
     {
-        public static int AddLoginHistory(LoginHistoryDTO loginHistory)
+        public static int AddLoginHistory(CreateLoginHistoryDto loginHistory)
         {
             int newLoginHistoryID = -1;
 
@@ -86,9 +59,9 @@ namespace AuthenticationService.Repository
             return newLoginHistoryID;
         }
 
-        private static LoginHistoryDTO _MapLoginHistoryDTO(SqlDataReader reader)
+        private static LoginHistoryDetailsDto _MapLoginHistoryDTO(SqlDataReader reader)
         {
-            return new LoginHistoryDTO
+            return new LoginHistoryDetailsDto
             {
                 ID = (int)reader["ID"],
                 UserID = reader["UserID"] == DBNull.Value ? null : (int?)reader["UserID"],
@@ -103,9 +76,9 @@ namespace AuthenticationService.Repository
             };
         }
 
-        public static LoginHistoryDTO? GetLoginHistoryByID(int id)
+        public static LoginHistoryDetailsDto? GetLoginHistoryByID(int id)
         {
-            LoginHistoryDTO? loginHistory = null;
+            LoginHistoryDetailsDto? loginHistory = null;
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -129,9 +102,9 @@ namespace AuthenticationService.Repository
             return loginHistory;
         }
 
-        public static List<LoginHistoryDTO> GetAllLoginHistory()
+        public static List<LoginHistoryDetailsDto> GetAllLoginHistory()
         {
-            List<LoginHistoryDTO> loginHistoryList = new List<LoginHistoryDTO>();
+            List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -154,9 +127,9 @@ namespace AuthenticationService.Repository
             return loginHistoryList;
         }
 
-        public static List<LoginHistoryDTO> GetLoginHistoryByUserID(int userId)
+        public static List<LoginHistoryDetailsDto> GetLoginHistoryByUserID(int userId)
         {
-            List<LoginHistoryDTO> loginHistoryList = new List<LoginHistoryDTO>();
+            List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -180,9 +153,9 @@ namespace AuthenticationService.Repository
             return loginHistoryList;
         }
 
-        public static List<LoginHistoryDTO> SearchLoginHistory(string searchText)
+        public static List<LoginHistoryDetailsDto> SearchLoginHistory(string searchText)
         {
-            List<LoginHistoryDTO> loginHistoryList = new List<LoginHistoryDTO>();
+            List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -206,9 +179,9 @@ namespace AuthenticationService.Repository
             return loginHistoryList;
         }
 
-        public static List<LoginHistoryDTO> FilterLoginHistoryByStatus(byte loginStatus)
+        public static List<LoginHistoryDetailsDto> FilterLoginHistoryByStatus(byte loginStatus)
         {
-            List<LoginHistoryDTO> loginHistoryList = new List<LoginHistoryDTO>();
+            List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -231,7 +204,6 @@ namespace AuthenticationService.Repository
 
             return loginHistoryList;
         }
-
 
     }
 }

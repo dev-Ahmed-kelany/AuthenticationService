@@ -1,33 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.Profile;
 
 namespace AuthenticationService.Repository
 {
-    public class ProfileDTO
-    {
-        public int ID { get; set; }
-
-        public string Name { get; set; } = null!;
-
-        public string Username { get; set; } = null!;
-
-        public string Email { get; set; } = null!;
-
-        public DateTime CreatedAt { get; set; }
-
-        public string RoleName { get; set; } = null!;
-
-        public string StatusName { get; set; } = null!;
-    }
-
+    
     public class ProfileRepository
     {
-        public static ProfileDTO? GetProfile(int userId)
+        public static ProfileDetailsDto? GetProfile(int userId)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -43,7 +23,7 @@ namespace AuthenticationService.Repository
                     {
                         if (reader.Read())
                         {
-                            return new ProfileDTO
+                            return new ProfileDetailsDto
                             {
                                 ID = (int)reader["ID"],
                                 Name = (string)reader["Name"],

@@ -1,20 +1,18 @@
-﻿using System;
-using AuthenticationService.Repository;
+﻿using AuthenticationService.Repository;
+using AuthenticationService.Dtos.Users;
 
 namespace AuthenticationService.Business
 {
     public class User
     {
-        public static int AddUser(string name, string username, string email,
-            string password, int roleId, int statusId)
+        public static int AddUser(CreateUserDto user)
         {
-            return UserRepository.AddUser(name, username, email, password, roleId, statusId);
+            return UserRepository.AddUser(user);
         }
 
-        public static bool UpdateUserByID(int id, string name, string username, string email
-            , int roleId, int statusId)
+        public static bool UpdateUserByID(int id, UpdateUserDto user)
         {
-            return UserRepository.UpdateUserByID(id, name, username, email, roleId, statusId);
+            return UserRepository.UpdateUserByID(id, user);
         }
 
         public static bool DeleteUserByID(int id)
@@ -22,27 +20,27 @@ namespace AuthenticationService.Business
             return UserRepository.DeleteUserByID(id);
         }
 
-        public static List<UserDTO> SearchUsers(string searchText)
+        public static List<UserDetailsDto> SearchUsers(string searchText)
         {
             return UserRepository.SearchUsers(searchText);
         }
 
-        public static List<UserDTO> FilterUsersByRoleID(int roleId)
+        public static List<UserDetailsDto> FilterUsersByRoleID(int roleId)
         {
             return UserRepository.FilterUsersByRoleID(roleId);
         }
 
-        public static List<UserDTO> FilterUsersByStatusID(int statusId)
+        public static List<UserDetailsDto> FilterUsersByStatusID(int statusId)
         {
             return UserRepository.FilterUsersByStatusID(statusId);
         }
 
-        public static List<UserDTO> GetAllUsers()
+        public static List<UserDetailsDto> GetAllUsers()
         {
             return UserRepository.GetAllUsers();
         }
 
-        public static UserDTO? GetUserByID(int id)
+        public static UserDetailsDto? GetUserByID(int id)
         {
             return UserRepository.GetUserByID(id);
         }

@@ -1,7 +1,6 @@
-﻿using AuthenticationService.Business;
-using AuthenticationService.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthenticationService.Business;
+using AuthenticationService.Dtos.Profile;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -10,9 +9,9 @@ namespace AuthenticationService.API.Controllers
     public class ProfileController : ControllerBase
     {
         [HttpGet("{id}", Name = "GetProfileByUserID")]
-        public ActionResult<ProfileDTO> GetProfile(int id)
+        public ActionResult<ProfileDetailsDto> GetProfile(int id)
         {
-            ProfileDTO? profile = Profile.GetProfile(id);
+            ProfileDetailsDto? profile = Profile.GetProfile(id);
 
             if (profile == null) return NotFound();
 

@@ -1,26 +1,12 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.Users;
 
 namespace AuthenticationService.Repository
 {
-    public class UserDTO
-    {
-        // Properties
-        public int ID { get; set; }
-        public string Name { get; set; } = null!;
-        public string Username { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public int RoleID { get; set; }
-        public int StatusID { get; set; }
-        public DateTime CreatedAt { get; set; }
-
-    }
-
     public class UserRepository
     {
-        public static int AddUser(string name, string username, string email,
-            string passwordHash, int roleId, int statusId)
+        public static int AddUser(CreateUserDto user)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -29,12 +15,12 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
 
                     //-- Add Parameters --//
-                    command.Parameters.AddWithValue("@Name", name);
-                    command.Parameters.AddWithValue("@Username", username);
-                    command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                    command.Parameters.AddWithValue("@RoleID", roleId);
-                    command.Parameters.AddWithValue("@StatusID", statusId);
+                    command.Parameters.AddWithValue("@Name", user.Name);
+                    command.Parameters.AddWithValue("@Username", user.Username);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@PasswordHash", user.Password);
+                    command.Parameters.AddWithValue("@RoleID", user.RoleID);
+                    command.Parameters.AddWithValue("@StatusID", user.StatusID);
 
                     //-- Add Output Parameter --//
                     SqlParameter outputNewUserID = new SqlParameter("@NewUserID", SqlDbType.Int)
@@ -53,8 +39,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static bool UpdateUserByID(int id, string name, string username, string email
-            , int roleId, int statusId)
+        public static bool UpdateUserByID(int id, UpdateUserDto user)
         {
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
@@ -65,11 +50,11 @@ namespace AuthenticationService.Repository
 
                     //-- Add Parameters --//
                     command.Parameters.AddWithValue("@UserID", id);
-                    command.Parameters.AddWithValue("@Name", name);
-                    command.Parameters.AddWithValue("@Username", username);
-                    command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@RoleID", roleId);
-                    command.Parameters.AddWithValue("@StatusID", statusId);
+                    command.Parameters.AddWithValue("@Name", user.Name);
+                    command.Parameters.AddWithValue("@Username", user.Username);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@RoleID", user.RoleID);
+                    command.Parameters.AddWithValue("@StatusID", user.StatusID);
 
                     //-- Add Output Parameter --//
                     SqlParameter outputRowsAffected = new SqlParameter("@RowsAffected", SqlDbType.Int)
@@ -115,9 +100,9 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static List<UserDTO> SearchUsers(string searchText)
+        public static List<UserDetailsDto> SearchUsers(string searchText)
         {
-            List<UserDTO> users = new List<UserDTO>();
+            List<UserDetailsDto> users = new List<UserDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -133,7 +118,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            UserDTO user = new UserDTO();
+                            UserDetailsDto user = new UserDetailsDto();
 
                             user.ID = (int)reader["ID"];
                             user.Name = (string)reader["Name"];
@@ -152,9 +137,9 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static List<UserDTO> FilterUsersByRoleID(int roleId)
+        public static List<UserDetailsDto> FilterUsersByRoleID(int roleId)
         {
-            List<UserDTO> users = new List<UserDTO>();
+            List<UserDetailsDto> users = new List<UserDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -170,7 +155,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            UserDTO user = new UserDTO();
+                            UserDetailsDto user = new UserDetailsDto();
 
                             user.ID = (int)reader["ID"];
                             user.Name = (string)reader["Name"];
@@ -189,9 +174,9 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static List<UserDTO> FilterUsersByStatusID(int statusId)
+        public static List<UserDetailsDto> FilterUsersByStatusID(int statusId)
         {
-            List<UserDTO> users = new List<UserDTO>();
+            List<UserDetailsDto> users = new List<UserDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -207,7 +192,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            UserDTO user = new UserDTO();
+                            UserDetailsDto user = new UserDetailsDto();
 
                             user.ID = (int)reader["ID"];
                             user.Name = (string)reader["Name"];
@@ -226,9 +211,9 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static List<UserDTO> GetAllUsers()
+        public static List<UserDetailsDto> GetAllUsers()
         {
-            List<UserDTO> users = new List<UserDTO>();
+            List<UserDetailsDto> users = new List<UserDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -242,7 +227,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            UserDTO user = new UserDTO();
+                            UserDetailsDto user = new UserDetailsDto();
 
                             user.ID = (int)reader["ID"];
                             user.Name = (string)reader["Name"];
@@ -261,7 +246,7 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static UserDTO? GetUserByID(int id)
+        public static UserDetailsDto? GetUserByID(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -277,7 +262,7 @@ namespace AuthenticationService.Repository
                     {
                         if (reader.Read())
                         {
-                            return new UserDTO
+                            return new UserDetailsDto
                             {
                                 ID = (int)reader["ID"],
                                 Name = (string)reader["Name"],

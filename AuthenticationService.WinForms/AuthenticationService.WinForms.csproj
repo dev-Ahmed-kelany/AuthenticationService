@@ -12,4 +12,8 @@
     <Folder Include="Controls\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AuthenticationService.Dtos\AuthenticationService.Dtos.csproj" />
+  </ItemGroup>
+
 </Project>

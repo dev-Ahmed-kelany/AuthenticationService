@@ -1,23 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.Roles;
 
 namespace AuthenticationService.Repository
 {
-    public class RoleDTO
-    {
-        public int ID { get; set; }
-        public string Name { get; set; } = null!;
-        public long PermissionsMask { get; set; }
-    }
-
     public class RoleRepository
     {
-        public static int AddRole(string name, long permissionsMask)
+        public static int AddRole(SaveRoleDto role)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -26,8 +15,8 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
 
                     //-- Add Parameters --//
-                    command.Parameters.AddWithValue("@Name", name);
-                    command.Parameters.AddWithValue("@PermissionsMask", permissionsMask);
+                    command.Parameters.AddWithValue("@Name", role.Name);
+                    command.Parameters.AddWithValue("@PermissionsMask", role.PermissionsMask);
 
                     //-- Add Output Parameter --//
                     SqlParameter outputNewRoleID = new SqlParameter("@NewRoleID", SqlDbType.Int)
@@ -46,7 +35,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static bool UpdateRoleByID(int id, string name, long permissionsMask)
+        public static bool UpdateRoleByID(int id, SaveRoleDto role)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -56,8 +45,8 @@ namespace AuthenticationService.Repository
 
                     //-- Add Parameters --//
                     command.Parameters.AddWithValue("@ID", id);
-                    command.Parameters.AddWithValue("@Name", name);
-                    command.Parameters.AddWithValue("@PermissionsMask", permissionsMask);
+                    command.Parameters.AddWithValue("@Name", role.Name);
+                    command.Parameters.AddWithValue("@PermissionsMask", role.PermissionsMask);
 
                     //-- Add Output Parameter --//
                     SqlParameter outputRowsAffected = new SqlParameter("@RowsAffected", SqlDbType.Int)
@@ -76,9 +65,9 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static List<RoleDTO> SearchRolesByName(string searchText)
+        public static List<RoleDetailsDto> SearchRolesByName(string searchText)
         {
-            List<RoleDTO> roles = new List<RoleDTO>();
+            List<RoleDetailsDto> roles = new List<RoleDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -94,7 +83,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            RoleDTO role = new RoleDTO();
+                            RoleDetailsDto role = new RoleDetailsDto();
 
                             role.ID = (int)reader["ID"];
                             role.Name = (string)reader["Name"];
@@ -109,7 +98,7 @@ namespace AuthenticationService.Repository
             return roles;
         }
 
-        public static RoleDTO? GetRoleByID(int id)
+        public static RoleDetailsDto? GetRoleByID(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -125,7 +114,7 @@ namespace AuthenticationService.Repository
                     {
                         if (reader.Read())
                         {
-                            return new RoleDTO
+                            return new RoleDetailsDto
                             {
                                 ID = (int)reader["ID"],
                                 Name = (string)reader["Name"],
@@ -139,9 +128,9 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static List<RoleDTO> GetAllRoles()
+        public static List<RoleDetailsDto> GetAllRoles()
         {
-            List<RoleDTO> roles = new List<RoleDTO>();
+            List<RoleDetailsDto> roles = new List<RoleDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -155,7 +144,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            RoleDTO role = new RoleDTO();
+                            RoleDetailsDto role = new RoleDetailsDto();
 
                             role.ID = (int)reader["ID"];
                             role.Name = (string)reader["Name"];

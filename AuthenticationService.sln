@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationService.Repos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationService.WinForms", "AuthenticationService.WinForms\AuthenticationService.WinForms.csproj", "{EC7376E8-5069-4C64-A458-11E8C6497135}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationService.Dtos", "AuthenticationService.Dtos\AuthenticationService.Dtos.csproj", "{7D7ED4A8-AC53-44C9-8612-678FDDC1504F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EC7376E8-5069-4C64-A458-11E8C6497135}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC7376E8-5069-4C64-A458-11E8C6497135}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC7376E8-5069-4C64-A458-11E8C6497135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D7ED4A8-AC53-44C9-8612-678FDDC1504F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D7ED4A8-AC53-44C9-8612-678FDDC1504F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D7ED4A8-AC53-44C9-8612-678FDDC1504F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D7ED4A8-AC53-44C9-8612-678FDDC1504F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

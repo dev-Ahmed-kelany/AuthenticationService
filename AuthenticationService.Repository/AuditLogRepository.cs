@@ -1,35 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.AuditLogs;
 
 namespace AuthenticationService.Repository
 {
-    public class AuditLogDTO
-    {
-        public int ID { get; set; }
-
-        public int UserID { get; set; }
-        public string Username { get; set; } = null!;
-        public string Name { get; set; } = null!;
-
-        public int EntityID { get; set; }
-        public string EntityName { get; set; } = null!;
-
-        public int OperationTypeID { get; set; }
-        public string OperationTypeName { get; set; } = null!;
-
-        public DateTime DateTime { get; set; }
-    }
-
     public class AuditLogRepository
     {
-        private static AuditLogDTO _MapAuditLogDTO(SqlDataReader reader)
+        private static AuditLogDetailsDto _MapAuditLogDTO(SqlDataReader reader)
         {
-            return new AuditLogDTO
+            return new AuditLogDetailsDto
             {
                 ID = (int)reader["ID"],
                 UserID = (int)reader["UserID"],
@@ -43,7 +22,7 @@ namespace AuthenticationService.Repository
             };
         }
 
-        public static int AddAuditLog(AuditLogDTO auditLog)
+        public static int AddAuditLog(CreateAuditLogDto auditLog)
         {
             int newAuditLogID = -1;
 
@@ -75,9 +54,9 @@ namespace AuthenticationService.Repository
             return newAuditLogID;
         }
 
-        public static AuditLogDTO? GetAuditLogByID(int id)
+        public static AuditLogDetailsDto? GetAuditLogByID(int id)
         {
-            AuditLogDTO? auditLog = null;
+            AuditLogDetailsDto? auditLog = null;
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -100,9 +79,9 @@ namespace AuthenticationService.Repository
             return auditLog;
         }
 
-        public static List<AuditLogDTO> GetAllAuditLogs()
+        public static List<AuditLogDetailsDto> GetAllAuditLogs()
         {
-            List<AuditLogDTO> auditLogs = new List<AuditLogDTO>();
+            List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -125,9 +104,9 @@ namespace AuthenticationService.Repository
             return auditLogs;
         }
 
-        public static List<AuditLogDTO> GetAuditLogsByUserID(int userId)
+        public static List<AuditLogDetailsDto> GetAuditLogsByUserID(int userId)
         {
-            List<AuditLogDTO> auditLogs = new List<AuditLogDTO>();
+            List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -152,9 +131,9 @@ namespace AuthenticationService.Repository
             return auditLogs;
         }
 
-        public static List<AuditLogDTO> SearchAuditLogs(string searchText)
+        public static List<AuditLogDetailsDto> SearchAuditLogs(string searchText)
         {
-            List<AuditLogDTO> auditLogs = new List<AuditLogDTO>();
+            List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -179,9 +158,9 @@ namespace AuthenticationService.Repository
             return auditLogs;
         }
 
-        public static List<AuditLogDTO> FilterAuditLogs(int? entityId, int? operationTypeId)
+        public static List<AuditLogDetailsDto> FilterAuditLogs(int? entityId, int? operationTypeId)
         {
-            List<AuditLogDTO> auditLogs = new List<AuditLogDTO>();
+            List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {

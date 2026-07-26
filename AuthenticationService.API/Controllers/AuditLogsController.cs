@@ -1,6 +1,6 @@
-﻿using AuthenticationService.Business;
-using AuthenticationService.Repository;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthenticationService.Business;
+using AuthenticationService.Dtos.AuditLogs;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -9,15 +9,15 @@ namespace AuthenticationService.API.Controllers
     public class AuditLogsController : ControllerBase
     {
         [HttpPost(Name = "AddAuditLog")]
-        public ActionResult<int> AddAuditLog(AuditLogDTO auditLog)
+        public ActionResult<int> AddAuditLog(CreateAuditLogDto auditLog)
         {
             return base.Ok(Business.AuditLog.AddAuditLog(auditLog));
         }
 
         [HttpGet("{id}", Name = "GetAuditLogByID")]
-        public ActionResult<AuditLogDTO> GetAuditLogByID(int id)
+        public ActionResult<AuditLogDetailsDto> GetAuditLogByID(int id)
         {
-            AuditLogDTO? auditLog = AuditLog.Find(id);
+            AuditLogDetailsDto? auditLog = AuditLog.Find(id);
 
             if (auditLog == null)
                 return NotFound();
@@ -26,25 +26,25 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<AuditLogDTO>> GetAllAuditLogs()
+        public ActionResult<List<AuditLogDetailsDto>> GetAllAuditLogs()
         {
             return Ok(AuditLog.GetAll());
         }
 
         [HttpGet("User/{userId}")]
-        public ActionResult<List<AuditLogDTO>> GetAuditLogsByUserID(int userId)
+        public ActionResult<List<AuditLogDetailsDto>> GetAuditLogsByUserID(int userId)
         {
             return Ok(AuditLog.GetByUserID(userId));
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<AuditLogDTO>> SearchAuditLogs(string searchText)
+        public ActionResult<List<AuditLogDetailsDto>> SearchAuditLogs(string searchText)
         {
             return Ok(AuditLog.Search(searchText));
         }
 
         [HttpGet("Filter")]
-        public ActionResult<List<AuditLogDTO>> FilterAuditLogs(int? entityId, int? operationTypeId)
+        public ActionResult<List<AuditLogDetailsDto>> FilterAuditLogs(int? entityId, int? operationTypeId)
         {
             return Ok(AuditLog.Filter(entityId, operationTypeId));
         }

@@ -1,33 +1,30 @@
 ﻿using AuthenticationService.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AuthenticationService.Dtos.Roles;
 
 namespace AuthenticationService.Business
 {
     public class Role
     {
-        public static int AddRole(string name, long permissionsMask)
+        public static int AddRole(SaveRoleDto role)
         {
-            return RoleRepository.AddRole(name, permissionsMask);
-        }
-        public static bool UpdateRoleByID(int id, string name, long permissionsMask)
-        {
-            return RoleRepository.UpdateRoleByID(id, name, permissionsMask);
+            return RoleRepository.AddRole(role);
         }
 
-        public static List<RoleDTO> SearchRolesByName(string searchText)
+        public static bool UpdateRoleByID(int id, SaveRoleDto role)
+        {
+            return RoleRepository.UpdateRoleByID(id, role);
+        }
+
+        public static List<RoleDetailsDto> SearchRolesByName(string searchText)
         {
             return RoleRepository.SearchRolesByName(searchText);
         }
 
-        public static RoleDTO? GetRoleByID(int id)
+        public static RoleDetailsDto? GetRoleByID(int id)
         {
             return RoleRepository.GetRoleByID(id);
         }
-        public static List<RoleDTO> GetAllRoles()
+        public static List<RoleDetailsDto> GetAllRoles()
         {
             return RoleRepository.GetAllRoles();
         }

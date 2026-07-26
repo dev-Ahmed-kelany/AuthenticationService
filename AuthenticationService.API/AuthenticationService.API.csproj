@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuthenticationService.Business\AuthenticationService.Business.csproj" />
+    <ProjectReference Include="..\AuthenticationService.Dtos\AuthenticationService.Dtos.csproj" />
   </ItemGroup>
 
 </Project>

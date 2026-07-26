@@ -1,4 +1,5 @@
 ﻿using AuthenticationService.Business;
+using AuthenticationService.Dtos.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,17 +11,17 @@ namespace AuthenticationService.API.Controllers
     {
 
         [HttpPost("login")]
-        public ActionResult Login(string username,  string password)
+        public ActionResult Login(LoginRequestDto request)
         {
-            enAuthenticationResult loginResult = Authentication.Login(username, password);
+            AuthenticationResult loginResult = Authentication.Login(request);
 
             switch (loginResult)
             {
-                case enAuthenticationResult.Success:
+                case AuthenticationResult.Success:
                     return Ok();
-                case enAuthenticationResult.InvalidCredentials:
+                case AuthenticationResult.InvalidCredentials:
                     return BadRequest("Invalid Credentials.");
-                case enAuthenticationResult.InactiveAccount:
+                case AuthenticationResult.InactiveAccount:
                     return BadRequest("Account is inactive.");
                 default:
                     return BadRequest();
@@ -28,17 +29,17 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPost("verify-credentials")]
-        public ActionResult VerifyCredentials(string username, string password)
+        public ActionResult VerifyCredentials(LoginRequestDto request)
         {
-            enAuthenticationResult verifyCredentialsResult = Authentication.VerifyCredentials(username, password);
+            AuthenticationResult verifyCredentialsResult = Authentication.VerifyCredentials(request);
 
             switch (verifyCredentialsResult)
             {
-                case enAuthenticationResult.Success:
+                case AuthenticationResult.Success:
                     return Ok();
-                case enAuthenticationResult.InvalidCredentials:
+                case AuthenticationResult.InvalidCredentials:
                     return BadRequest("Invalid Credentials.");
-                case enAuthenticationResult.InactiveAccount:
+                case AuthenticationResult.InactiveAccount:
                     return BadRequest("Account is inactive.");
                 default:
                     return BadRequest();
@@ -46,17 +47,17 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPost("change-password")]
-        public ActionResult ChangePassword(string username, string currentPassword, string newPassword)
+        public ActionResult ChangePassword(ChangePasswordDto request)
         {
-            enAuthenticationResult changePasswordResult = Authentication.ChangePassword(username, currentPassword, newPassword);
+            AuthenticationResult changePasswordResult = Authentication.ChangePassword(request);
 
             switch (changePasswordResult)
             {
-                case enAuthenticationResult.Success:
+                case AuthenticationResult.Success:
                     return Ok();
-                case enAuthenticationResult.InvalidCredentials:
+                case AuthenticationResult.InvalidCredentials:
                     return BadRequest("Invalid Credentials.");
-                case enAuthenticationResult.InactiveAccount:
+                case AuthenticationResult.InactiveAccount:
                     return BadRequest("Account is inactive.");
                 default:
                     return BadRequest();

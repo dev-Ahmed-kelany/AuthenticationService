@@ -1,23 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.Permissions;
 
 namespace AuthenticationService.Repository
 {
-    public class PermissionDTO
+   public class PermissionRepository
     {
-        public int ID { get; set; }
-        public string Name { get; set; } = null!;
-        public long BitValue { get; set; }
-    }
-
-    public class PermissionRepository
-    {
-        public static int AddPermission(string name, long bitValue)
+        public static int AddPermission(CreatePermissionDto permission)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -26,8 +15,8 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
 
                     //-- Add Parameters --//
-                    command.Parameters.AddWithValue("@Name", name);
-                    command.Parameters.AddWithValue("@BitValue", bitValue);
+                    command.Parameters.AddWithValue("@Name", permission.Name);
+                    command.Parameters.AddWithValue("@BitValue", permission.BitValue);
 
                     //-- Add Output Parameter --//
                     SqlParameter outputNewPermissionID = new SqlParameter("@NewPermissionID", SqlDbType.Int)
@@ -46,7 +35,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static bool UpdatePermissionByID(int id, string name)
+        public static bool UpdatePermissionByID(int id, UpdatePermissionDto permission)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -56,7 +45,7 @@ namespace AuthenticationService.Repository
 
                     //-- Add Parameters --//
                     command.Parameters.AddWithValue("@ID", id);
-                    command.Parameters.AddWithValue("@Name", name);
+                    command.Parameters.AddWithValue("@Name", permission.Name);
 
                     //-- Add Output Parameter --//
                     SqlParameter outputRowsAffected = new SqlParameter("@RowsAffected", SqlDbType.Int)
@@ -75,9 +64,9 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static List<PermissionDTO> SearchPermissionsByName(string searchText)
+        public static List<PermissionDetailsDto> SearchPermissionsByName(string searchText)
         {
-            List<PermissionDTO> permissions = new List<PermissionDTO>();
+            List<PermissionDetailsDto> permissions = new List<PermissionDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -93,7 +82,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            PermissionDTO permission = new PermissionDTO();
+                            PermissionDetailsDto permission = new PermissionDetailsDto();
 
                             permission.ID = (int)reader["ID"];
                             permission.Name = (string)reader["Name"];
@@ -108,7 +97,7 @@ namespace AuthenticationService.Repository
             return permissions;
         }
 
-        public static PermissionDTO? GetPermissionByID(int id)
+        public static PermissionDetailsDto? GetPermissionByID(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -124,7 +113,7 @@ namespace AuthenticationService.Repository
                     {
                         if (reader.Read())
                         {
-                            return new PermissionDTO
+                            return new PermissionDetailsDto
                             {
                                 ID = (int)reader["ID"],
                                 Name = (string)reader["Name"],
@@ -138,9 +127,9 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static List<PermissionDTO> GetAllPermissions()
+        public static List<PermissionDetailsDto> GetAllPermissions()
         {
-            List<PermissionDTO> permissions = new List<PermissionDTO>();
+            List<PermissionDetailsDto> permissions = new List<PermissionDetailsDto>();
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -154,7 +143,7 @@ namespace AuthenticationService.Repository
                     {
                         while (reader.Read())
                         {
-                            PermissionDTO permission = new PermissionDTO();
+                            PermissionDetailsDto permission = new PermissionDetailsDto();
 
                             permission.ID = (int)reader["ID"];
                             permission.Name = (string)reader["Name"];

@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Repository;
+﻿using AuthenticationService.Dtos.Profile;
+using AuthenticationService.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AuthenticationService.Business
 {
     public class Profile
     {
-        public static ProfileDTO? GetProfile(int userId)
+        public static ProfileDetailsDto? GetProfile(int userId)
         {
             return ProfileRepository.GetProfile(userId);
         }

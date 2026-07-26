@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AuthenticationService.Business;
-using Microsoft.AspNetCore.Http.HttpResults;
-using AuthenticationService.Repository;
+using AuthenticationService.Dtos.Users;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -10,17 +8,15 @@ namespace AuthenticationService.API.Controllers
     public class UsersController : ControllerBase
     {
         [HttpPost(Name = "AddUser")]
-        public ActionResult<int> AddUser(string name, string username, string email,
-            string password, int roleId, int statusId)
+        public ActionResult<int> AddUser(CreateUserDto user)
         {
-            return base.Ok(Business.User.AddUser(name, username, email, password, roleId, statusId));
+            return base.Ok(Business.User.AddUser(user));
         }
 
         [HttpPut("{id}", Name = "UpdateUserByID")]
-        public ActionResult<bool> UpdateUserByID(int id, string name, string username, string email,
-            int roleId, int statusId)
+        public ActionResult<bool> UpdateUserByID(int id, UpdateUserDto user)
         {
-            return base.Ok(Business.User.UpdateUserByID(id, name, username, email, roleId, statusId));
+            return base.Ok(Business.User.UpdateUserByID(id, user));
         }
 
         [HttpDelete("{id}", Name = "DeleteUserByID")]
@@ -30,33 +26,33 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<UserDTO>> SearchUsers(string searchText)
+        public ActionResult<List<UserDetailsDto>> SearchUsers(string searchText)
         {
             return base.Ok(Business.User.SearchUsers(searchText));
         }
 
         [HttpGet("Filter/Role/{roleId}")]
-        public ActionResult<List<UserDTO>> FilterUsersByRoleID(int roleId)
+        public ActionResult<List<UserDetailsDto>> FilterUsersByRoleID(int roleId)
         {
             return base.Ok(Business.User.FilterUsersByRoleID(roleId));
         }
 
         [HttpGet("Filter/Status/{statusId}")]
-        public ActionResult<List<UserDTO>> FilterUsersByStatusID(int statusId)
+        public ActionResult<List<UserDetailsDto>> FilterUsersByStatusID(int statusId)
         {
             return base.Ok(Business.User.FilterUsersByStatusID(statusId));
         }
 
         [HttpGet]
-        public ActionResult<List<UserDTO>> GetAllUsers()
+        public ActionResult<List<UserDetailsDto>> GetAllUsers()
         {
             return base.Ok(Business.User.GetAllUsers());
         }
 
         [HttpGet("{id}", Name = "GetUserByID")]
-        public ActionResult<UserDTO> GetUserByID(int id)
+        public ActionResult<UserDetailsDto> GetUserByID(int id)
         {
-            UserDTO? user = AuthenticationService.Business.User.GetUserByID(id);
+            UserDetailsDto? user = AuthenticationService.Business.User.GetUserByID(id);
 
             if (user == null)
                 return NotFound();

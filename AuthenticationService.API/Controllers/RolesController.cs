@@ -1,7 +1,6 @@
-﻿using AuthenticationService.Business;
-using AuthenticationService.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthenticationService.Business;
+using AuthenticationService.Dtos.Roles;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -10,27 +9,27 @@ namespace AuthenticationService.API.Controllers
     public class RolesController : ControllerBase
     {
         [HttpPost(Name = "AddRole")]
-        public ActionResult<int> AddRole(string name, long permissionsMask)
+        public ActionResult<int> AddRole(SaveRoleDto role)
         {
-            return Ok(Role.AddRole(name, permissionsMask));
+            return Ok(Role.AddRole(role));
         }
 
         [HttpPut("{id}", Name = "UpdateRoleByID")]
-        public ActionResult<bool> UpdateRoleByID(int id, string name, long permissionsMask)
+        public ActionResult<bool> UpdateRoleByID(int id, SaveRoleDto role)
         {
-            return Ok(Role.UpdateRoleByID(id, name, permissionsMask));
+            return Ok(Role.UpdateRoleByID(id, role));
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<RoleDTO>> SearchRolesByName(string searchText)
+        public ActionResult<List<RoleDetailsDto>> SearchRolesByName(string searchText)
         {
             return Ok(Role.SearchRolesByName(searchText));
         }
 
         [HttpGet("{id}", Name = "GetRoleByID")]
-        public ActionResult<RoleDTO> GetRoleByID(int id)
+        public ActionResult<RoleDetailsDto> GetRoleByID(int id)
         {
-            RoleDTO? role = Role.GetRoleByID(id);
+            RoleDetailsDto? role = Role.GetRoleByID(id);
 
             if (role == null)
                 return NotFound();
@@ -39,7 +38,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<RoleDTO>> GetAllRoles()
+        public ActionResult<List<RoleDetailsDto>> GetAllRoles()
         {
             return Ok(Role.GetAllRoles());
         }

@@ -1,29 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using AuthenticationService.Dtos.Authentication;
 
 namespace AuthenticationService.Repository
 {
-    public class AuthenticationUserDTO
-    {
-        public int ID { get; set; }
-
-        public string Username { get; set; } = null!;
-
-        public string PasswordHash { get; set; } = null!;
-
-        public int RoleID { get; set; }
-
-        public int StatusID { get; set; }
-    }
-
     public class AuthenticationRepository
     {
-        public static bool GetAuthenticationUserByUsername(string username, ref AuthenticationUserDTO user)
+        public static bool GetAuthenticationUserByUsername(string username, ref AuthenticationUserDto user)
         {
             bool isFound = false;
 

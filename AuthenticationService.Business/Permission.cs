@@ -1,33 +1,30 @@
 ﻿using AuthenticationService.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AuthenticationService.Dtos.Permissions;
 
 namespace AuthenticationService.Business
 {
     public class Permission
     {
-        public static int AddPermission(string name, long bitValue)
+        public static int AddPermission(CreatePermissionDto permission)
         {
-            return PermissionRepository.AddPermission(name, bitValue);
-        }
-        public static bool UpdatePermissionByID(int id, string name)
-        {
-            return PermissionRepository.UpdatePermissionByID(id, name);
+            return PermissionRepository.AddPermission(permission);
         }
 
-        public static List<PermissionDTO> SearchPermissionsByName(string searchText)
+        public static bool UpdatePermissionByID(int id, UpdatePermissionDto permission)
+        {
+            return PermissionRepository.UpdatePermissionByID(id, permission);
+        }
+
+        public static List<PermissionDetailsDto> SearchPermissionsByName(string searchText)
         {
             return PermissionRepository.SearchPermissionsByName(searchText);
         }
 
-        public static PermissionDTO? GetPermissionByID(int id)
+        public static PermissionDetailsDto? GetPermissionByID(int id)
         {
             return PermissionRepository.GetPermissionByID(id);
         }
-        public static List<PermissionDTO> GetAllPermissions()
+        public static List<PermissionDetailsDto> GetAllPermissions()
         {
             return PermissionRepository.GetAllPermissions();
         }
