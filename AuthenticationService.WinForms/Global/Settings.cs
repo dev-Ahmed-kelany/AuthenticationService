@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.WinForms.Global
 {
-    public class clsSettings
+    public class Settings
     {
         public static readonly string APIBaseURL = "https://localhost:7044/api/";
     }

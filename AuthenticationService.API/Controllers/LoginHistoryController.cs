@@ -8,45 +8,45 @@ namespace AuthenticationService.API.Controllers
     [ApiController]
     public class LoginHistoryController : ControllerBase
     {
-        [HttpPost(Name = "AddNewLoginHistory")]
-        public ActionResult<int> AddNewLoginHistory(LoginHistoryDTO LoginHistory)
+        [HttpPost(Name = "AddLoginHistory")]
+        public ActionResult<int> AddLoginHistory(LoginHistoryDTO loginHistory)
         {
-            return Ok(clsLoginHistory.AddNewLoginHistory(LoginHistory));
+            return base.Ok(Business.LoginHistory.AddLoginHistory(loginHistory));
         }
 
         [HttpGet("{ID}", Name = "GetLoginHistoryByID")]
-        public ActionResult<LoginHistoryDTO> GetLoginHistoryByID(int ID)
+        public ActionResult<LoginHistoryDTO> GetLoginHistoryByID(int id)
         {
-            LoginHistoryDTO? LoginHistory = clsLoginHistory.Find(ID);
+            LoginHistoryDTO? loginHistory = LoginHistory.Find(id);
 
-            if (LoginHistory == null)
+            if (loginHistory == null)
                 return NotFound();
 
-            return Ok(LoginHistory);
+            return Ok(loginHistory);
         }
 
         [HttpGet]
         public ActionResult<List<LoginHistoryDTO>> GetAllLoginHistory()
         {
-            return Ok(clsLoginHistory.GetAll());
+            return Ok(LoginHistory.GetAll());
         }
 
-        [HttpGet("User/{UserID}")]
-        public ActionResult<List<LoginHistoryDTO>> GetLoginHistoryByUserID(int UserID)
+        [HttpGet("User/{userId}")]
+        public ActionResult<List<LoginHistoryDTO>> GetLoginHistoryByUserID(int userId)
         {
-            return Ok(clsLoginHistory.GetByUserID(UserID));
+            return Ok(LoginHistory.GetByUserID(userId));
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<LoginHistoryDTO>> SearchLoginHistory(string SearchText)
+        public ActionResult<List<LoginHistoryDTO>> SearchLoginHistory(string searchText)
         {
-            return Ok(clsLoginHistory.Search(SearchText));
+            return Ok(LoginHistory.Search(searchText));
         }
 
         [HttpGet("Status/{Status}")]
-        public ActionResult<List<LoginHistoryDTO>> FilterLoginHistoryByStatus(byte Status)
+        public ActionResult<List<LoginHistoryDTO>> FilterLoginHistoryByStatus(byte status)
         {
-            return Ok(clsLoginHistory.FilterByStatus(Status));
+            return Ok(LoginHistory.FilterByStatus(status));
         }
     }
 }

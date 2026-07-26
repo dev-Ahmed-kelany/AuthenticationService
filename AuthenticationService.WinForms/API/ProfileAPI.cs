@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace AuthenticationService.WinForms.API
 {
-    public static class clsProfileAPI
+    public static class ProfileAPI
     {
         private static readonly HttpClient _Client = new HttpClient()
         {
-            BaseAddress = new Uri(clsSettings.APIBaseURL)
+            BaseAddress = new Uri(Settings.APIBaseURL)
         };
 
         public static async Task<ProfileDTO?> GetProfileByUserIDAsync(int ID)

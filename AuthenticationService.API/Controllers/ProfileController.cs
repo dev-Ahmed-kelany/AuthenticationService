@@ -9,14 +9,14 @@ namespace AuthenticationService.API.Controllers
     [ApiController]
     public class ProfileController : ControllerBase
     {
-        [HttpGet("{ID}", Name = "GetProfileByUserID")]
-        public ActionResult<ProfileDTO> GetProfile(int ID)
+        [HttpGet("{id}", Name = "GetProfileByUserID")]
+        public ActionResult<ProfileDTO> GetProfile(int id)
         {
-            ProfileDTO? Profile = clsProfile.GetProfile(ID);
+            ProfileDTO? profile = Profile.GetProfile(id);
 
-            if (Profile == null) return NotFound();
+            if (profile == null) return NotFound();
 
-            return Ok(Profile);
+            return Ok(profile);
         }
     }
 }

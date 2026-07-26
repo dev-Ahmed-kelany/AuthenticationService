@@ -9,59 +9,59 @@ namespace AuthenticationService.API.Controllers
     [Route("api/Users")]
     public class UsersController : ControllerBase
     {
-        [HttpPost(Name = "AddNewUser")]
-        public ActionResult<int> AddNewUser(string Name, string Username, string Email,
-            string PasswordHash, int RoleID, int StatusID)
+        [HttpPost(Name = "AddUser")]
+        public ActionResult<int> AddUser(string name, string username, string email,
+            string password, int roleId, int statusId)
         {
-            return Ok(clsUser.AddNewUser(Name, Username, Email, PasswordHash, RoleID, StatusID));
+            return base.Ok(Business.User.AddUser(name, username, email, password, roleId, statusId));
         }
 
-        [HttpPut("{ID}", Name = "UpdateUserByID")]
-        public ActionResult<bool> UpdateUserByID(int ID, string Name, string Username, string Email,
-            int RoleID, int StatusID)
+        [HttpPut("{id}", Name = "UpdateUserByID")]
+        public ActionResult<bool> UpdateUserByID(int id, string name, string username, string email,
+            int roleId, int statusId)
         {
-            return Ok(clsUser.UpdateUserByID(ID, Name, Username, Email, RoleID, StatusID));
+            return base.Ok(Business.User.UpdateUserByID(id, name, username, email, roleId, statusId));
         }
 
-        [HttpDelete("{ID}", Name = "DeleteUserByID")]
-        public ActionResult<bool> DeleteUserByID(int ID)
+        [HttpDelete("{id}", Name = "DeleteUserByID")]
+        public ActionResult<bool> DeleteUserByID(int id)
         {
-            return Ok(clsUser.DeleteUserByID(ID));
+            return base.Ok(Business.User.DeleteUserByID(id));
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<UserDTO>> SearchUsers(string SearchText)
+        public ActionResult<List<UserDTO>> SearchUsers(string searchText)
         {
-            return Ok(clsUser.SearchUsers(SearchText));
+            return base.Ok(Business.User.SearchUsers(searchText));
         }
 
-        [HttpGet("Filter/Role/{RoleID}")]
-        public ActionResult<List<UserDTO>> FilterUsersByRoleID(int RoleID)
+        [HttpGet("Filter/Role/{roleId}")]
+        public ActionResult<List<UserDTO>> FilterUsersByRoleID(int roleId)
         {
-            return Ok(clsUser.FilterUsersByRoleID(RoleID));
+            return base.Ok(Business.User.FilterUsersByRoleID(roleId));
         }
 
-        [HttpGet("Filter/Status/{StatusID}")]
-        public ActionResult<List<UserDTO>> FilterUsersByStatusID(int StatusID)
+        [HttpGet("Filter/Status/{statusId}")]
+        public ActionResult<List<UserDTO>> FilterUsersByStatusID(int statusId)
         {
-            return Ok(clsUser.FilterUsersByStatusID(StatusID));
+            return base.Ok(Business.User.FilterUsersByStatusID(statusId));
         }
 
         [HttpGet]
         public ActionResult<List<UserDTO>> GetAllUsers()
         {
-            return Ok(clsUser.GetAllUsers());
+            return base.Ok(Business.User.GetAllUsers());
         }
 
-        [HttpGet("{ID}", Name = "GetUserByID")]
-        public ActionResult<UserDTO> GetUserByID(int ID)
+        [HttpGet("{id}", Name = "GetUserByID")]
+        public ActionResult<UserDTO> GetUserByID(int id)
         {
-            UserDTO? User = clsUser.GetUserByID(ID);
+            UserDTO? user = AuthenticationService.Business.User.GetUserByID(id);
 
-            if (User == null)
+            if (user == null)
                 return NotFound();
 
-            return Ok(User);
+            return Ok(user);
         }
     }
 }

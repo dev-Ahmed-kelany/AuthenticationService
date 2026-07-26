@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.WinForms.Global
 {
-    internal class clsGlobal
+    internal class Global
     {
         public static UserDTO? CurrentUser = null; 
     }

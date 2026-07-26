@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace AuthenticationService.WinForms.API
 {
-    public static class clsPermissionAPI
+    public static class PermissionAPI
     {
         private static readonly HttpClient _Client = new HttpClient()
         {
-            BaseAddress = new Uri(clsSettings.APIBaseURL)
+            BaseAddress = new Uri(Settings.APIBaseURL)
         };
 
         public static async Task<int> AddNewPermissionAsync(string Name, long BitValue)

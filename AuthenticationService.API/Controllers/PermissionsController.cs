@@ -9,39 +9,39 @@ namespace AuthenticationService.API.Controllers
     [ApiController]
     public class PermissionsController : ControllerBase
     {
-        [HttpPost(Name = "AddNewPermission")]
-        public ActionResult<int> AddNewPermission(string Name, long BitValue)
+        [HttpPost(Name = "AddPermission")]
+        public ActionResult<int> AddPermission(string name, long bitValue)
         {
-            return Ok(clsPermission.AddNewPermission(Name, BitValue));
+            return Ok(Permission.AddPermission(name, bitValue));
         }
 
-        [HttpPut("{ID}", Name = "UpdatePermissionByID")]
-        public ActionResult<bool> UpdatePermissionByID(int ID, string Name)
+        [HttpPut("{id}", Name = "UpdatePermissionByID")]
+        public ActionResult<bool> UpdatePermissionByID(int id, string name)
         {
-            return Ok(clsPermission.UpdatePermissionByID(ID, Name));
+            return Ok(Permission.UpdatePermissionByID(id, name));
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<PermissionDTO>> SearchPermissionsByName(string SearchText)
+        public ActionResult<List<PermissionDTO>> SearchPermissionsByName(string searchText)
         {
-            return Ok(clsPermission.SearchPermissionsByName(SearchText));
+            return Ok(Permission.SearchPermissionsByName(searchText));
         }
 
-        [HttpGet("{ID}", Name = "GetPermissionByID")]
-        public ActionResult<PermissionDTO> GetPermissionByID(int ID)
+        [HttpGet("{id}", Name = "GetPermissionByID")]
+        public ActionResult<PermissionDTO> GetPermissionByID(int id)
         {
-            PermissionDTO? Permission = clsPermission.GetPermissionByID(ID);
+            PermissionDTO? permission = Permission.GetPermissionByID(id);
 
-            if (Permission == null)
+            if (permission == null)
                 return NotFound();
 
-            return Ok(Permission);
+            return Ok(permission);
         }
 
         [HttpGet]
         public ActionResult<List<PermissionDTO>> GetAllPermissions()
         {
-            return Ok(clsPermission.GetAllPermissions());
+            return Ok(Permission.GetAllPermissions());
         }
     }
 }

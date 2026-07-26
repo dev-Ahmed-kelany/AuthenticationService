@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace AuthenticationService.WinForms.API
 {
-    public static class clsLoginHistoryAPI
+    public static class LoginHistoryAPI
     {
         private static readonly HttpClient _Client = new HttpClient()
         {
-            BaseAddress = new Uri(clsSettings.APIBaseURL)
+            BaseAddress = new Uri(Settings.APIBaseURL)
         };
 
         public static async Task<int> AddNewLoginHistoryAsync(LoginHistoryDTO LoginHistory)

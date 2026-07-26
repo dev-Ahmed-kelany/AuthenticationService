@@ -2,9 +2,9 @@ using AuthenticationService.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Connection String
-clsSettings.ConnectionString =
-    builder.Configuration.GetConnectionString("DefaultConnection")!;
+// Configure connection String
+Settings.ConnectionString =
+    builder.Configuration.GetConnectionString("DevelopingConnection")!;
 
 // Add services to the container.
 

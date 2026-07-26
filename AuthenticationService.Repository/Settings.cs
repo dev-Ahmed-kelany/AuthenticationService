@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Repository
 {
-    public class clsSettings
+    public class Settings
     {
         public static string ConnectionString { get; set; } = string.Empty;
     }

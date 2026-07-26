@@ -2,11 +2,11 @@
 
 namespace AuthenticationService.WinForms.API
 {
-    public static class clsAuthenticationAPI
+    public static class AuthenticationAPI
     {
         private static readonly HttpClient _Client = new HttpClient()
         {
-            BaseAddress = new Uri(clsSettings.APIBaseURL)
+            BaseAddress = new Uri(Settings.APIBaseURL)
         };
 
         public static async Task<bool> LoginAsync(string Username, string Password)

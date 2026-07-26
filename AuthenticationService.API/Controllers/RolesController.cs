@@ -9,39 +9,39 @@ namespace AuthenticationService.API.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        [HttpPost(Name = "AddNewRole")]
-        public ActionResult<int> AddNewRole(string Name, long PermissionsMask)
+        [HttpPost(Name = "AddRole")]
+        public ActionResult<int> AddRole(string name, long permissionsMask)
         {
-            return Ok(clsRole.AddNewRole(Name, PermissionsMask));
+            return Ok(Role.AddRole(name, permissionsMask));
         }
 
-        [HttpPut("{ID}", Name = "UpdateRoleByID")]
-        public ActionResult<bool> UpdateRoleByID(int ID, string Name, long PermissionsMask)
+        [HttpPut("{id}", Name = "UpdateRoleByID")]
+        public ActionResult<bool> UpdateRoleByID(int id, string name, long permissionsMask)
         {
-            return Ok(clsRole.UpdateRoleByID(ID, Name, PermissionsMask));
+            return Ok(Role.UpdateRoleByID(id, name, permissionsMask));
         }
 
         [HttpGet("Search")]
-        public ActionResult<List<RoleDTO>> SearchRolesByName(string SearchText)
+        public ActionResult<List<RoleDTO>> SearchRolesByName(string searchText)
         {
-            return Ok(clsRole.SearchRolesByName(SearchText));
+            return Ok(Role.SearchRolesByName(searchText));
         }
 
-        [HttpGet("{ID}", Name = "GetRoleByID")]
-        public ActionResult<RoleDTO> GetRoleByID(int ID)
+        [HttpGet("{id}", Name = "GetRoleByID")]
+        public ActionResult<RoleDTO> GetRoleByID(int id)
         {
-            RoleDTO? Role = clsRole.GetRoleByID(ID);
+            RoleDTO? role = Role.GetRoleByID(id);
 
-            if (Role == null)
+            if (role == null)
                 return NotFound();
 
-            return Ok(Role);
+            return Ok(role);
         }
 
         [HttpGet]
         public ActionResult<List<RoleDTO>> GetAllRoles()
         {
-            return Ok(clsRole.GetAllRoles());
+            return Ok(Role.GetAllRoles());
         }
     }
 }

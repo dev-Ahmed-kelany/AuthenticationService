@@ -21,13 +21,13 @@ namespace AuthenticationService.WinForms.Login
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
-            bool IsLoggedIn = await clsAuthenticationAPI.LoginAsync(tbUsername.Text, tbPassword.Text);
+            bool IsLoggedIn = await AuthenticationAPI.LoginAsync(tbUsername.Text, tbPassword.Text);
 
             if (IsLoggedIn)
             {
                 frmMain Main = new frmMain(this);
 
-                clsGlobal.CurrentUser = (await clsUserAPI.SearchUsersAsync(tbUsername.Text))?.FirstOrDefault();
+                Global.Global.CurrentUser = (await UserAPI.SearchUsersAsync(tbUsername.Text))?.FirstOrDefault();
 
                 this.Hide();
                 Main.Show();

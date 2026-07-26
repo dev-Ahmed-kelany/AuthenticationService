@@ -10,11 +10,11 @@ namespace AuthenticationService.API.Controllers
     {
 
         [HttpPost("login")]
-        public ActionResult Login(string Username,  string Password)
+        public ActionResult Login(string username,  string password)
         {
-            enAuthenticationResult LoginResult = clsAuthentication.Login(Username, Password);
+            enAuthenticationResult loginResult = Authentication.Login(username, password);
 
-            switch (LoginResult)
+            switch (loginResult)
             {
                 case enAuthenticationResult.Success:
                     return Ok();
@@ -28,11 +28,11 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPost("verify-credentials")]
-        public ActionResult VerifyCredentials(string Username, string Password)
+        public ActionResult VerifyCredentials(string username, string password)
         {
-            enAuthenticationResult VerifyCredentialsResult = clsAuthentication.VerifyCredentials(Username, Password);
+            enAuthenticationResult verifyCredentialsResult = Authentication.VerifyCredentials(username, password);
 
-            switch (VerifyCredentialsResult)
+            switch (verifyCredentialsResult)
             {
                 case enAuthenticationResult.Success:
                     return Ok();
@@ -46,11 +46,11 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPost("change-password")]
-        public ActionResult ChangePassword(string Username, string CurrentPassword, string NewPassword)
+        public ActionResult ChangePassword(string username, string currentPassword, string newPassword)
         {
-            enAuthenticationResult ChangePasswordResult = clsAuthentication.ChangePassword(Username, CurrentPassword, NewPassword);
+            enAuthenticationResult changePasswordResult = Authentication.ChangePassword(username, currentPassword, newPassword);
 
-            switch (ChangePasswordResult)
+            switch (changePasswordResult)
             {
                 case enAuthenticationResult.Success:
                     return Ok();

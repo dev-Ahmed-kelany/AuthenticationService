@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
-    public class clsProfile
+    public class Profile
     {
-        public static ProfileDTO? GetProfile(int UserID)
+        public static ProfileDTO? GetProfile(int userId)
         {
-            return clsProfileRepository.GetProfile(UserID);
+            return ProfileRepository.GetProfile(userId);
         }
     }
 }
