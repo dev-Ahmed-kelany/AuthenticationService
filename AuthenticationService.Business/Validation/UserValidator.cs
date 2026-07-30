@@ -1,146 +1,156 @@
 ﻿using AuthenticationService.Dtos.Users;
-using AuthenticationService.Repository;
 
 namespace AuthenticationService.Business.Validation
 {
+    public static class UserValidatorErrors
+    {
+        public static readonly Error RequiredName = new Error("User.RequiredName", "Name is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidNameLength = new Error("User.InvalidNameLength", "Name cannot exceed 100 characters.", HttpStatus.BadRequest);
+        
+        public static readonly Error RequiredUsername = new Error("User.RequiredUsername", "Username is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidUsernameLength = new Error("User.InvalidUsernameLength", "Username cannot exceed 50 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidUsername = new Error("User.InvalidUsername", "Username is invalid.", HttpStatus.BadRequest);
+        
+        public static readonly Error RequiredEmail = new Error("User.RequiredEmail", "Email is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidEmailLength = new Error("User.InvalidEmailLength", "Email cannot be less than 6 characters and greater than 255 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidEmail = new Error("User.InvalidEmail", "Email address is invalid.", HttpStatus.BadRequest);
+        
+        public static readonly Error RequiredPassword = new Error("User.RequiredPassword", "Password is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidPasswordLength = new Error("User.InvalidPasswordLength", "Password cannot be less than 8 characters and greater than 255 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidPassword = new Error("User.InvalidPassword", "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.", HttpStatus.BadRequest);
+        
+        public static readonly Error InvalidId = new Error("User.InvalidId", "Id must be greater than zero.", HttpStatus.BadRequest);
+        public static readonly Error InvalidRoleId = new Error("User.InvalidRoleId", "RoleId must be greater than zero.", HttpStatus.BadRequest);
+        public static readonly Error InvalidStatusId = new Error("User.InvalidStatusId", "StatusId must be greater than zero.", HttpStatus.BadRequest);
+    }
+
     public static class UserValidator
     {
-        static void ValidateName(string? name, ValidationResult result)
+        static Result ValidateName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                ValidationError error = new ValidationError("Name", "Name is required.");
-                result.Errors.Add(error);
-                return;
+                return Result.Failure(UserValidatorErrors.RequiredName);
             }
 
             if (!ValidationHelper.IsLengthBetween(name, 1, 100))
             {
-                ValidationError error = new ValidationError("Name", "Name cannot exceed 100 characters.");
-                result.Errors.Add(error);
+                return Result.Failure(UserValidatorErrors.InvalidNameLength);
             }
+
+            return Result.Success();
         }
 
-        static void ValidateUsername(string? username, ValidationResult result)
+        static Result ValidateUsername(string? username)
         {
             if (string.IsNullOrWhiteSpace(username))
-            {
-                ValidationError error = new ValidationError("Username", "Username is required.");
-                result.Errors.Add(error);
-                return;
-            }
+                return Result.Failure(UserValidatorErrors.RequiredUsername);
 
             if (!ValidationHelper.IsLengthBetween(username, 1, 50))
-            {
-                ValidationError error = new ValidationError("Username", "Username cannot exceed 50 characters.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidUsernameLength);
 
             if (!ValidationHelper.IsValidUsername(username))
-            {
-                ValidationError error = new ValidationError("Username", "Username is invalid.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidUsername);
+
+            return Result.Success();
         }
 
-        static void ValidateEmail(string? email, ValidationResult result)
+        static Result ValidateEmail(string? email)
         {
             if (string.IsNullOrWhiteSpace(email))
-            {
-                ValidationError error = new ValidationError("Email", "Email is required.");
-                result.Errors.Add(error);
-                return;
-            }
+                return Result.Failure(UserValidatorErrors.RequiredEmail);
 
             if (!ValidationHelper.IsLengthBetween(email, 6, 255))
-            {
-                ValidationError error = new ValidationError("Email", "Email cannot be less than 6 characters and greater than 255 characters.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidEmailLength);
 
             if (!ValidationHelper.IsValidEmail(email))
-            {
-                ValidationError error = new ValidationError("Email", "Email address is invalid.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidEmail);
+
+            return Result.Success();
         }
 
-        static void ValidatePassword(string? password, ValidationResult result)
+        static Result ValidatePassword(string? password)
         {
             if (string.IsNullOrWhiteSpace(password))
-            {
-                ValidationError error = new ValidationError("Password", "Password is required.");
-                result.Errors.Add(error);
-                return;
-            }
+                return Result.Failure(UserValidatorErrors.RequiredPassword);
 
             if (!ValidationHelper.IsLengthBetween(password, 8, 255))
-            {
-                ValidationError error = new ValidationError("Password", "Password cannot be less than 8 characters and greater than 255 characters.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidPasswordLength);
 
             if (!ValidationHelper.IsStrongPassword(password))
-            {
-                ValidationError error = new ValidationError("Password", "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidPassword);
+
+            return Result.Success();
         }
 
-        static void ValidateId(int id, ValidationResult result)
+        public static Result ValidateId(int id)
         {
             if (id <= 0)
-            {
-                ValidationError error = new ValidationError("ID", "ID must be greater than zero.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidId);
+
+            return Result.Success();
         }
 
-        static void ValidateRoleId(int roleId, ValidationResult result)
+        public static Result ValidateRoleId(int roleId)
         {
             if (roleId <= 0)
-            {
-                ValidationError error = new ValidationError("RoleID", "RoleID must be greater than zero.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidRoleId);
+
+            return Result.Success();
         }
 
-        static void ValidateStatusId(int statusId, ValidationResult result)
+        public static Result ValidateStatusId(int statusId)
         {
             if (statusId <= 0)
-            {
-                ValidationError error = new ValidationError("StatusID", "StatusID must be greater than zero.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidStatusId);
+
+            return Result.Success();
         }
 
-
-        public static ValidationResult ValidateCreate(CreateUserDto user)
+        public static Result ValidateCreate(CreateUserDto user)
         {
-            ValidationResult result = new ValidationResult();
+            var validateName = ValidateName(user.Name);
+            if (!validateName.IsSuccess) return validateName;
 
-            ValidateName(user.Name, result);
-            ValidateUsername(user.Username, result);
-            ValidateEmail(user.Email, result);
-            ValidatePassword(user.Password, result);
-            ValidateRoleId(user.RoleID, result);
-            ValidateStatusId(user.StatusID, result);
+            var validateUsername = ValidateUsername(user.Username);
+            if (!validateUsername.IsSuccess) return validateUsername;
 
-            return result;
+            var validateEmail = ValidateEmail(user.Email);
+            if (!validateEmail.IsSuccess) return validateEmail;
+
+            var validatePassword = ValidatePassword(user.Password);
+            if (!validatePassword.IsSuccess) return validatePassword;
+
+            var validateRoleId = ValidateRoleId(user.RoleID);
+            if (!validateRoleId.IsSuccess) return validateRoleId;
+
+            var validateStatusId = ValidateStatusId(user.StatusID);
+            if (!validateStatusId.IsSuccess) return validateStatusId;
+
+            return Result.Success();
         }
 
-        public static ValidationResult ValidateUpdate(int id, UpdateUserDto user)
+        public static Result ValidateUpdate(int id, UpdateUserDto user)
         {
-            ValidationResult result = new ValidationResult();
+            var validateId = ValidateId(id);
+            if (!validateId.IsSuccess) return validateId;
 
-            ValidateId(id, result);
-            ValidateName(user.Name, result);
-            ValidateUsername(user.Username, result);
-            ValidateEmail(user.Email, result);
-            ValidateRoleId(user.RoleID, result);
-            ValidateStatusId(user.StatusID, result);
+            var validateName = ValidateName(user.Name);
+            if (!validateName.IsSuccess) return validateName;
 
-            return result;
+            var validateUsername = ValidateUsername(user.Username);
+            if (!validateUsername.IsSuccess) return validateUsername;
+
+            var validateEmail = ValidateEmail(user.Email);
+            if (!validateEmail.IsSuccess) return validateEmail;
+
+            var validateRoleId = ValidateRoleId(user.RoleID);
+            if (!validateRoleId.IsSuccess) return validateRoleId;
+
+            var validateStatusId = ValidateStatusId(user.StatusID);
+            if (!validateStatusId.IsSuccess) return validateStatusId;
+
+            return Result.Success();
         }
     }
 }

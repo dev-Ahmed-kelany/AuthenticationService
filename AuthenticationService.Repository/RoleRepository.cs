@@ -159,5 +159,90 @@ namespace AuthenticationService.Repository
             return roles;
         }
 
+        public static bool RoleExists(int roleId)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_RoleExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@RoleID", roleId);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
+        public static bool RoleNameExists(string roleName)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_RoleNameExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@RoleName", roleName);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
+        public static bool RoleNameExists(string roleName, int excludeRoleId)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_RoleNameExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@RoleName", roleName);
+                    command.Parameters.AddWithValue("@ExcludeRoleID", excludeRoleId);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Dtos.Authentication
 {
-    public class LoginRequestDto
+    public class AuthenticationRequestDto
 
     {
         public string Username { get; set; } = null!;

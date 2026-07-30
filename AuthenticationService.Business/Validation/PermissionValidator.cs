@@ -1,62 +1,67 @@
 ﻿using AuthenticationService.Dtos.Permissions;
-using AuthenticationService.Dtos.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuthenticationService.Business.Validation
 {
+    public static class PermissionValidatorErrors
+    {
+        public static readonly Error RequiredName = new Error("Permission.RequiredName", "Name is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidNameLength = new Error("Permission.InvalidNameLength", "Name cannot exceed 100 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidBitValue = new Error("Permission.InvalidBitValue", "BitValue must be greater than zero & Power of 2.", HttpStatus.BadRequest);
+        public static readonly Error InvalidId = new Error("Permission.InvalidId", "Id must be greater than zero.", HttpStatus.BadRequest);
+    }
+
     public class PermissionValidator
     {
-        static void ValidateName(string? name, ValidationResult result)
+        static Result ValidateName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
-            {
-                ValidationError error = new ValidationError("Name", "Name is required.");
-                result.Errors.Add(error);
-                return;
-            }
+                return Result.Failure(PermissionValidatorErrors.RequiredName);
 
             if (!ValidationHelper.IsLengthBetween(name, 1, 100))
-            {
-                ValidationError error = new ValidationError("Name", "Name cannot exceed 100 characters.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(PermissionValidatorErrors.InvalidNameLength);
+
+            return Result.Success();
         }
 
-        static void ValidateBitValue(long bitValue, ValidationResult result)
+        static Result ValidateBitValue(long bitValue)
         {
             if (bitValue <= 0)
-            {
-                ValidationError error = new ValidationError("BitValue", "BitValue must be greater than zero.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(PermissionValidatorErrors.InvalidBitValue);
 
             if (!((bitValue & (bitValue - 1)) == 0))
-            {
-                result.AddError("BitValue", "BitValue is not a power of 2");
-            }
+                return Result.Failure(PermissionValidatorErrors.InvalidBitValue);
+
+            return Result.Success();
         }
 
-        public static ValidationResult ValidateCreate(CreatePermissionDto permission)
+        static Result ValidateId(int id)
         {
-            ValidationResult result = new ValidationResult();
+            if (id <= 0)
+                return Result.Failure(PermissionValidatorErrors.InvalidId);
 
-            ValidateName(permission.Name, result);
-            ValidateBitValue(permission.BitValue, result);
-
-            return result;
+            return Result.Success();
         }
 
-        public static ValidationResult ValidateUpdate(int id, UpdatePermissionDto permission)
+        public static Result ValidateCreate(CreatePermissionDto permission)
         {
-            ValidationResult result = new ValidationResult();
+            var validateName = ValidateName(permission.Name);
+            if (!validateName.IsSuccess) return validateName;
 
-            ValidateName(permission.Name, result);
+            var validateBitValue = ValidateBitValue(permission.BitValue);
+            if (!validateBitValue.IsSuccess) return validateBitValue;
 
-            return result;
+            return Result.Success();
+        }
+
+        public static Result ValidateUpdate(int id, UpdatePermissionDto permission)
+        {
+            var validateId = ValidateId(id);
+            if (!validateId.IsSuccess) return validateId;
+
+            var validateName = ValidateName(permission.Name);
+            if (!validateName.IsSuccess) return validateName;
+
+            return Result.Success();
         }
     }
 }

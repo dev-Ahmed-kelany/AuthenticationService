@@ -1,4 +1,6 @@
-﻿using AuthenticationService.Dtos.Profile;
+﻿using AuthenticationService.Business.Validation;
+using AuthenticationService.Dtos.Profile;
+using AuthenticationService.Dtos.Users;
 using AuthenticationService.Repository;
 using System;
 using System.Collections.Generic;
@@ -8,11 +10,22 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
+    public static class ProfileErrors
+    {
+        public static readonly Error NotFound = new Error("User.NotFound", "User is not found.", HttpStatus.NotFound);
+    }
+
     public class Profile
     {
-        public static ProfileDetailsDto? GetProfile(int userId)
+        public static Result<ProfileDetailsDto> GetProfile(int userId)
         {
-            return ProfileRepository.GetProfile(userId);
+            var validationResult = UserValidator.ValidateId(userId);
+            if (!validationResult.IsSuccess) return new Result<ProfileDetailsDto>(validationResult);
+
+            var profile = ProfileRepository.GetProfile(userId);
+            if (profile == null) return Result<ProfileDetailsDto>.Failure(ProfileErrors.NotFound);
+
+            return Result<ProfileDetailsDto>.Success(profile);
         }
     }
 }

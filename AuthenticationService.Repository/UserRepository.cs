@@ -280,5 +280,145 @@ namespace AuthenticationService.Repository
             return null;
         }
 
+        public static bool UserExists(int userId)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_UserExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@UserID", userId);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
+        public static bool UsernameExists(string username)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_UsernameExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Username", username);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+        public static bool UsernameExists(string username, int excludeUserId)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_UsernameExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Username", username);
+                    command.Parameters.AddWithValue("@ExcludeUserID", excludeUserId);
+
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+        public static bool EmailExists(string email)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_EmailExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+        public static bool EmailExists(string email, int excludeUserId)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_EmailExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@ExcludeUserID", excludeUserId);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
     }
 }

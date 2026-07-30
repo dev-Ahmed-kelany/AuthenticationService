@@ -157,5 +157,89 @@ namespace AuthenticationService.Repository
 
             return permissions;
         }
+
+        public static bool PermissionExists(int permissionID)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_PermissionExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@PermissionID", permissionID);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
+        public static bool PermissionNameExists(string permissionName)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_PermissionNameExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@PermissionName", permissionName);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
+
+        public static bool BitValueExists(long bitValue)
+        {
+            bool exists = false;
+
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_BitValueExists", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@BitValue", bitValue);
+
+                    try
+                    {
+                        connection.Open();
+
+                        exists = Convert.ToBoolean(command.ExecuteScalar());
+                    }
+                    catch (Exception)
+                    {
+                        // Error Handling will be added later.
+                    }
+                }
+            }
+
+            return exists;
+        }
     }
 }

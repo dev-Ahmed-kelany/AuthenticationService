@@ -6,10 +6,8 @@ namespace AuthenticationService.Repository
 {
     public class AuthenticationRepository
     {
-        public static bool GetAuthenticationUserByUsername(string username, ref AuthenticationUserDto user)
+        public static AuthenticationUserDto? GetAuthenticationUserByUsername(string username)
         {
-            bool isFound = false;
-
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
                 using (SqlCommand command = new SqlCommand("SP_GetAuthenticationUserByUsername", connection))
@@ -18,32 +16,28 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@Username", username);
 
-                    try
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        connection.Open();
-
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
+                            return new AuthenticationUserDto()
                             {
-                                isFound = true;
-
-                                user.ID = (int)reader["ID"];
-                                user.Username = (string)reader["Username"];
-                                user.PasswordHash = (string)reader["PasswordHash"];
-                                user.RoleID = (int)reader["RoleID"];
-                                user.StatusID = (int)reader["StatusID"];
-                            }
+                                ID = (int)reader["ID"],
+                                Username = (string)reader["Username"],
+                                PasswordHash = (string)reader["PasswordHash"],
+                                RoleID = (int)reader["RoleID"],
+                                StatusID = (int)reader["StatusID"]
+                            };
+                                
                         }
                     }
-                    catch (Exception)
-                    {
-                        isFound = false;
-                    }
+                    
                 }
             }
 
-            return isFound;
+            return null;
         }
 
         public static bool ChangePassword(int userId, string newPasswordHash)

@@ -1,72 +1,78 @@
 ﻿using AuthenticationService.Dtos.Authentication;
-using AuthenticationService.Dtos.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuthenticationService.Business.Validation
 {
+    public static class AuthenticationValidatorErrors
+    {
+        public static readonly Error RequiredName = new Error("User.RequiredName", "Name is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidNameLength = new Error("User.InvalidNameLength", "Name cannot exceed 100 characters.", HttpStatus.BadRequest);
+
+        public static readonly Error RequiredUsername = new Error("User.RequiredUsername", "Username is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidUsernameLength = new Error("User.InvalidUsernameLength", "Username cannot exceed 50 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidUsername = new Error("User.InvalidUsername", "Username is invalid.", HttpStatus.BadRequest);
+
+        public static readonly Error RequiredEmail = new Error("User.RequiredEmail", "Email is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidEmailLength = new Error("User.InvalidEmailLength", "Email cannot be less than 6 characters and greater than 255 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidEmail = new Error("User.InvalidEmail", "Email address is invalid.", HttpStatus.BadRequest);
+
+        public static readonly Error RequiredPassword = new Error("User.RequiredPassword", "Password is required.", HttpStatus.BadRequest);
+        public static readonly Error InvalidPasswordLength = new Error("User.InvalidPasswordLength", "Password cannot be less than 8 characters and greater than 255 characters.", HttpStatus.BadRequest);
+        public static readonly Error InvalidPassword = new Error("User.InvalidPassword", "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.", HttpStatus.BadRequest);
+
+        public static readonly Error InvalidId = new Error("User.InvalidId", "Id must be greater than zero.", HttpStatus.BadRequest);
+        public static readonly Error InvalidRoleId = new Error("User.InvalidRoleId", "RoleId must be greater than zero.", HttpStatus.BadRequest);
+        public static readonly Error InvalidStatusId = new Error("User.InvalidStatusId", "StatusId must be greater than zero.", HttpStatus.BadRequest);
+    }
     public class AuthenticationValidator
     {
-        static void ValidateUsername(string? username, ValidationResult result)
+        static Result ValidateUsername(string? username)
         {
             if (string.IsNullOrWhiteSpace(username))
-            {
-                ValidationError error = new ValidationError("Username", "Username is required.");
-                result.Errors.Add(error);
-                return;
-            }
+                return Result.Failure(UserValidatorErrors.RequiredUsername);
 
             if (!ValidationHelper.IsLengthBetween(username, 1, 50))
-            {
-                ValidationError error = new ValidationError("Username", "Username cannot exceed 50 characters.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidUsernameLength);
 
             if (!ValidationHelper.IsValidUsername(username))
-            {
-                ValidationError error = new ValidationError("Username", "Username is invalid.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidUsername);
+
+            return Result.Success();
         }
 
-        static void ValidatePassword(string? password, string property, ValidationResult result)
+        static Result ValidatePassword(string? password)
         {
             if (string.IsNullOrWhiteSpace(password))
-            {
-                ValidationError error = new ValidationError(property, $"{property} is required.");
-                result.Errors.Add(error);
-                return;
-            }
+                return Result.Failure(UserValidatorErrors.RequiredPassword);
 
             if (!ValidationHelper.IsLengthBetween(password, 8, 255))
-            {
-                ValidationError error = new ValidationError(property, $"{property} cannot be less than 8 characters and greater than 255 characters.");
-                result.Errors.Add(error);
-            }
+                return Result.Failure(UserValidatorErrors.InvalidPasswordLength);
+
+            return Result.Success();
         }
 
-        public static ValidationResult ValidateLogin(LoginRequestDto request)
+        public static Result ValidateAuthenticate(AuthenticationRequestDto request)
         {
-            ValidationResult result = new ValidationResult();
+            var validateUsername = ValidateUsername(request.Username);
+            if (!validateUsername.IsSuccess) return validateUsername;
 
-            ValidateUsername(request.Username, result);
-            ValidatePassword(request.Password, "Password", result);
+            var validatePassword = ValidatePassword(request.Password);
+            if (!validatePassword.IsSuccess) return validatePassword;
 
-            return result;
+            return Result.Success();
         }
 
-        public static ValidationResult ValidateChangePassword(ChangePasswordDto request)
+        public static Result ValidateChangePassword(ChangePasswordDto request)
         {
-            ValidationResult result = new ValidationResult();
+            var validateUsername = ValidateUsername(request.Username);
+            if (!validateUsername.IsSuccess) return validateUsername;
 
-            ValidateUsername(request.Username, result);
-            ValidatePassword(request.CurrentPassword, "CurrentPassword", result);
-            ValidatePassword(request.NewPassword, "NewPassword", result);
+            var validateCurrentPassword = ValidatePassword(request.CurrentPassword);
+            if (!validateCurrentPassword.IsSuccess) return validateCurrentPassword;
 
-            return result;
+            var validateNewPassword = ValidatePassword(request.NewPassword);
+            if (!validateNewPassword.IsSuccess) return validateNewPassword;
+
+            return Result.Success();
         }
     }
 }

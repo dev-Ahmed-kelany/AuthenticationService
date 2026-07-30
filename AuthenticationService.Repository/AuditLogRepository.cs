@@ -22,7 +22,7 @@ namespace AuthenticationService.Repository
             };
         }
 
-        public static int AddAuditLog(CreateAuditLogDto auditLog)
+        public static int Add(CreateAuditLogDto auditLog)
         {
             int newAuditLogID = -1;
 

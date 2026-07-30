@@ -1,7 +1,6 @@
-﻿using AuthenticationService.Business;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthenticationService.Business;
 using AuthenticationService.Dtos.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -11,56 +10,65 @@ namespace AuthenticationService.API.Controllers
     {
 
         [HttpPost("login")]
-        public ActionResult Login(LoginRequestDto request)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult Login(AuthenticationRequestDto request)
         {
-            AuthenticationResult loginResult = Authentication.Login(request);
-
-            switch (loginResult)
+            try
             {
-                case AuthenticationResult.Success:
-                    return Ok();
-                case AuthenticationResult.InvalidCredentials:
-                    return BadRequest("Invalid Credentials.");
-                case AuthenticationResult.InactiveAccount:
-                    return BadRequest("Account is inactive.");
-                default:
-                    return BadRequest();
+                var result = Authentication.Login(request);
+
+                if (!result.IsSuccess)
+                    return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An unexpected error occured.", Details = ex.Message });
             }
         }
 
         [HttpPost("verify-credentials")]
-        public ActionResult VerifyCredentials(LoginRequestDto request)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult VerifyCredentials(AuthenticationRequestDto request)
         {
-            AuthenticationResult verifyCredentialsResult = Authentication.VerifyCredentials(request);
-
-            switch (verifyCredentialsResult)
+            try
             {
-                case AuthenticationResult.Success:
-                    return Ok();
-                case AuthenticationResult.InvalidCredentials:
-                    return BadRequest("Invalid Credentials.");
-                case AuthenticationResult.InactiveAccount:
-                    return BadRequest("Account is inactive.");
-                default:
-                    return BadRequest();
+                var result = Authentication.VerifyCredentials(request);
+
+                if (!result.IsSuccess)
+                    return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An unexpected error occured.", Details = ex.Message });
             }
         }
 
         [HttpPost("change-password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult ChangePassword(ChangePasswordDto request)
         {
-            AuthenticationResult changePasswordResult = Authentication.ChangePassword(request);
-
-            switch (changePasswordResult)
+            try
             {
-                case AuthenticationResult.Success:
-                    return Ok();
-                case AuthenticationResult.InvalidCredentials:
-                    return BadRequest("Invalid Credentials.");
-                case AuthenticationResult.InactiveAccount:
-                    return BadRequest("Account is inactive.");
-                default:
-                    return BadRequest();
+                var result = Authentication.ChangePassword(request);
+
+                if (!result.IsSuccess)
+                    return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An unexpected error occured.", Details = ex.Message });
             }
         }
 

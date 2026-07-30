@@ -1,79 +1,56 @@
-﻿using AuthenticationService.Dtos.Authentication;
-using AuthenticationService.Repository;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AuthenticationService.Repository;
+using AuthenticationService.Dtos.Authentication;
+using AuthenticationService.Business.Validation;
 
 namespace AuthenticationService.Business
 {
-    public enum AuthenticationResult
+    public static class AuthenticationErrors
     {
-        Success = 1,
-        InvalidCredentials = 2,
-        InactiveAccount = 3,
-        LockedAccount = 4,
-        DeletedAccount = 5
-    }
+        public static readonly Error InvalidCredentials = new Error("User.InvalidCredentials", "Invalid Credentials.", HttpStatus.BadRequest);
+        public static readonly Error InactiveAccount = new Error("User.InactiveAccount", "Account is inactive.", HttpStatus.BadRequest);
 
-    public class LoginResult
-    {
-        public AuthenticationResult Result { get; set; }
-        public LoginResponseDto? LoginResponse { get; set; }
     }
 
     public class Authentication
     {
-
-        private static AuthenticationResult AuthenticateUser(string username,
-                                                  string password,
-                                                  ref AuthenticationUserDto user)
+        private static bool PasswordMatches(string password, string passwordHash)
         {
-            bool IsFound = AuthenticationRepository.GetAuthenticationUserByUsername(username, ref user);
-
-            if (!IsFound)
-                return AuthenticationResult.InvalidCredentials;
-
-            if (password != user.PasswordHash)
-                return AuthenticationResult.InvalidCredentials;
-
-            if (user.StatusID != 1)
-                return AuthenticationResult.InactiveAccount;
-
-            return AuthenticationResult.Success;
+            return password == passwordHash;
         }
 
-        public static AuthenticationResult Login(LoginRequestDto request)
+        private static bool IsAccountActive(int statusID)
         {
-            AuthenticationUserDto user = new AuthenticationUserDto();
-
-            return AuthenticateUser(request.Username, request.Password, ref user);
+            return statusID == 1;
         }
 
-        public static AuthenticationResult VerifyCredentials(LoginRequestDto request)
+        private static Result<AuthenticationUserDto> AuthenticateUser(AuthenticationRequestDto request)
         {
-            AuthenticationUserDto user = new AuthenticationUserDto();
+            var validationResult = AuthenticationValidator.ValidateAuthenticate(request);
+            if (!validationResult.IsSuccess) return new Result<AuthenticationUserDto>(validationResult);
 
-            return AuthenticateUser(request.Username, request.Password, ref user);
+            AuthenticationUserDto? user = AuthenticationRepository.GetAuthenticationUserByUsername(request.Username);
+            if (user == null) return Result<AuthenticationUserDto>.Failure(AuthenticationErrors.InvalidCredentials);
+
+            if (!PasswordMatches(request.Password, user.PasswordHash)) return Result<AuthenticationUserDto>.Failure(AuthenticationErrors.InvalidCredentials);
+
+            if (!IsAccountActive(user.StatusID)) return Result<AuthenticationUserDto>.Failure(AuthenticationErrors.InactiveAccount);
+
+            return Result<AuthenticationUserDto>.Success(user);
         }
 
-        public static AuthenticationResult ChangePassword(ChangePasswordDto request)
+        public static Result Login(AuthenticationRequestDto request) { return AuthenticateUser(request); }
+
+        public static Result VerifyCredentials(AuthenticationRequestDto request) { return AuthenticateUser(request); }
+
+        public static Result ChangePassword(ChangePasswordDto request)
         {
-            AuthenticationUserDto user = new AuthenticationUserDto();
+            var authenticationResult = AuthenticateUser(new AuthenticationRequestDto { Username = request.Username, Password = request.CurrentPassword});
+            if (!authenticationResult.IsSuccess) return authenticationResult;
 
-            AuthenticationResult result = AuthenticateUser(request.Username, request.CurrentPassword, ref user);
+            bool isChanged = AuthenticationRepository.ChangePassword(userId: authenticationResult.Data.ID, newPasswordHash: request.NewPassword);
+            if (!isChanged) Result.Failure(AuthenticationErrors.InvalidCredentials);
 
-            if (result != AuthenticationResult.Success)
-                return result;
-
-            bool IsChanged = AuthenticationRepository.ChangePassword(user.ID, request.NewPassword);
-
-            if (!IsChanged)
-                return AuthenticationResult.InvalidCredentials;
-
-            return AuthenticationResult.Success;
+            return Result.Success();
         }
     }
 }
