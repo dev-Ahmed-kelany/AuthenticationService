@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.Dtos.AuditLogs;
 using AuthenticationService.Dtos.LoginHistory;
 using AuthenticationService.Repository;
+using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
@@ -17,12 +18,12 @@ namespace AuthenticationService.Business
 
     public static class LoginHistory
     {
-        public static Result<int> AddLoginHistory(CreateLoginHistoryDto loginHistory)
+        public static async Task<Result<int>> AddAsync(CreateLoginHistoryDto loginHistory)
         {
             if (loginHistory == null)
                 return Result<int>.Failure(LoginHistoryErrors.IsNull);
 
-            int newLoginHistoryId = LoginHistoryRepository.AddLoginHistory(loginHistory); ;
+            int newLoginHistoryId = await LoginHistoryRepository.AddAsync(loginHistory); ;
 
             if (newLoginHistoryId == -1)
                 return Result<int>.Failure(LoginHistoryErrors.NotCreated);
@@ -30,12 +31,12 @@ namespace AuthenticationService.Business
             return Result<int>.Success(newLoginHistoryId);
         }
 
-        public static Result<LoginHistoryDetailsDto> Find(int id)
+        public static async Task<Result<LoginHistoryDetailsDto>> GetByIDAsync(int id)
         {
             if (id <= 0)
                 return Result<LoginHistoryDetailsDto>.Failure(LoginHistoryErrors.InvalidID);
 
-            var loginHistory = LoginHistoryRepository.GetLoginHistoryByID(id);
+            var loginHistory = await LoginHistoryRepository.GetByIDAsync(id);
 
             if (loginHistory == null)
                 return Result<LoginHistoryDetailsDto>.Failure(LoginHistoryErrors.NotFound);
@@ -43,36 +44,36 @@ namespace AuthenticationService.Business
             return Result<LoginHistoryDetailsDto>.Success(loginHistory);
         }
 
-        public static Result<List<LoginHistoryDetailsDto>> GetAll()
+        public static async Task<Result<List<LoginHistoryDetailsDto>>> GetAllAsync()
         {
-            List<LoginHistoryDetailsDto> loginHistoryList = LoginHistoryRepository.GetAllLoginHistory();
+            List<LoginHistoryDetailsDto> loginHistoryList = await LoginHistoryRepository.GetAllAsync();
 
             return Result<List<LoginHistoryDetailsDto>>.Success(loginHistoryList);
         }
 
-        public static Result<List<LoginHistoryDetailsDto>> GetByUserID(int userId)
+        public static async Task<Result<List<LoginHistoryDetailsDto>>> GetByUserIDAsync(int userId)
         {
             if (userId <= 0)
                 return Result<List<LoginHistoryDetailsDto>>.Failure(LoginHistoryErrors.InvalidUserID);
 
-            List<LoginHistoryDetailsDto> loginHistoryList = LoginHistoryRepository.GetLoginHistoryByUserID(userId);
+            List<LoginHistoryDetailsDto> loginHistoryList = await LoginHistoryRepository.GetByUserIDAsync(userId);
 
             return Result<List<LoginHistoryDetailsDto>>.Success(loginHistoryList);
         }
 
-        public static Result<List<LoginHistoryDetailsDto>> Search(string searchText)
+        public static async Task<Result<List<LoginHistoryDetailsDto>>> SearchAsync(string searchText)
         {
-            List<LoginHistoryDetailsDto> loginHistoryList = LoginHistoryRepository.SearchLoginHistory(searchText);
+            List<LoginHistoryDetailsDto> loginHistoryList = await LoginHistoryRepository.SearchAsync(searchText);
 
             return Result<List<LoginHistoryDetailsDto>>.Success(loginHistoryList);
         }
 
-        public static Result<List<LoginHistoryDetailsDto>> FilterByStatus(byte status)
+        public static async Task<Result<List<LoginHistoryDetailsDto>>> FilterByStatusAsync(byte status)
         {
             if (!(status == 0 || status == 1))
                 return Result<List<LoginHistoryDetailsDto>>.Failure(LoginHistoryErrors.InvalidStatus);
 
-            List<LoginHistoryDetailsDto> loginHistoryList = LoginHistoryRepository.FilterLoginHistoryByStatus(status);
+            List<LoginHistoryDetailsDto> loginHistoryList = await LoginHistoryRepository.FilterByStatusAsync(status);
 
             return Result<List<LoginHistoryDetailsDto>>.Success(loginHistoryList);
         }

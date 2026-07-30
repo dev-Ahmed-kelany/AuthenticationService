@@ -13,11 +13,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<ProfileDetailsDto> GetProfile(int id)
+        public async Task<ActionResult<ProfileDetailsDto>> GetProfileAsync(int id)
         {
             try
             {
-                var result = Profile.GetProfile(id);
+                var result = await Profile.GetProfileAsync(id);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });

@@ -6,7 +6,7 @@ namespace AuthenticationService.Repository
 {
     public class UserRepository
     {
-        public static int AddUser(CreateUserDto user)
+        public static async Task<int> AddAsync(CreateUserDto user)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -29,9 +29,9 @@ namespace AuthenticationService.Repository
                     };
                     command.Parameters.Add(outputNewUserID);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)command.Parameters["@NewUserID"].Value;
 
@@ -39,7 +39,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static bool UpdateUserByID(int id, UpdateUserDto user)
+        public static async Task<bool> UpdateByIDAsync(int id, UpdateUserDto user)
         {
 
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
@@ -63,16 +63,16 @@ namespace AuthenticationService.Repository
                     };
                     command.Parameters.Add(outputRowsAffected);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)command.Parameters["@RowsAffected"].Value == 1;
                 }
             }
         }
 
-        public static bool DeleteUserByID(int id)
+        public static async Task<bool> DeleteByIDAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -91,16 +91,16 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.Add(outputRowsAffected);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)outputRowsAffected.Value == 1;
                 }
             }
         }
 
-        public static List<UserDetailsDto> SearchUsers(string searchText)
+        public static async Task<List<UserDetailsDto>> SearchAsync(string searchText)
         {
             List<UserDetailsDto> users = new List<UserDetailsDto>();
 
@@ -112,11 +112,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@SearchText", searchText);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             UserDetailsDto user = new UserDetailsDto();
 
@@ -137,7 +137,7 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static List<UserDetailsDto> FilterUsersByRoleID(int roleId)
+        public static async Task<List<UserDetailsDto>> FilterByRoleIDAsync(int roleId)
         {
             List<UserDetailsDto> users = new List<UserDetailsDto>();
 
@@ -149,11 +149,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@RoleID", roleId);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             UserDetailsDto user = new UserDetailsDto();
 
@@ -174,7 +174,7 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static List<UserDetailsDto> FilterUsersByStatusID(int statusId)
+        public static async Task<List<UserDetailsDto>> FilterByStatusIDAsync(int statusId)
         {
             List<UserDetailsDto> users = new List<UserDetailsDto>();
 
@@ -186,11 +186,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@StatusID", statusId);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             UserDetailsDto user = new UserDetailsDto();
 
@@ -211,7 +211,7 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static List<UserDetailsDto> GetAllUsers()
+        public static async Task<List<UserDetailsDto>> GetAllAsync()
         {
             List<UserDetailsDto> users = new List<UserDetailsDto>();
 
@@ -221,11 +221,11 @@ namespace AuthenticationService.Repository
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             UserDetailsDto user = new UserDetailsDto();
 
@@ -246,7 +246,7 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static UserDetailsDto? GetUserByID(int id)
+        public static async Task<UserDetailsDto>? GetByIDAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -256,11 +256,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@UserID", id);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             return new UserDetailsDto
                             {
@@ -280,7 +280,7 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static bool UserExists(int userId)
+        public static async Task<bool> ExistsAsync(int userId)
         {
             bool exists = false;
 
@@ -292,23 +292,17 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@UserID", userId);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                    
                 }
             }
 
             return exists;
         }
 
-        public static bool UsernameExists(string username)
+        public static async Task<bool> UsernameExistsAsync(string username)
         {
             bool exists = false;
 
@@ -320,22 +314,15 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@Username", username);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
                 }
             }
 
             return exists;
         }
-        public static bool UsernameExists(string username, int excludeUserId)
+        public static async Task<bool> UsernameExistsAsync(string username, int excludeUserId)
         {
             bool exists = false;
 
@@ -348,23 +335,17 @@ namespace AuthenticationService.Repository
                     command.Parameters.AddWithValue("@Username", username);
                     command.Parameters.AddWithValue("@ExcludeUserID", excludeUserId);
 
+                    await connection.OpenAsync();
 
-                    try
-                    {
-                        connection.Open();
-
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                    
                 }
             }
 
             return exists;
         }
-        public static bool EmailExists(string email)
+
+        public static async Task<bool> EmailExistsAsync(string email)
         {
             bool exists = false;
 
@@ -375,23 +356,17 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
 
                     command.Parameters.AddWithValue("@Email", email);
+                    
+                    await connection.OpenAsync();
 
-                    try
-                    {
-                        connection.Open();
-
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                   
                 }
             }
 
             return exists;
         }
-        public static bool EmailExists(string email, int excludeUserId)
+        public static async Task<bool> EmailExistsAsync(string email, int excludeUserId)
         {
             bool exists = false;
 
@@ -404,16 +379,10 @@ namespace AuthenticationService.Repository
                     command.Parameters.AddWithValue("@Email", email);
                     command.Parameters.AddWithValue("@ExcludeUserID", excludeUserId);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                   
                 }
             }
 

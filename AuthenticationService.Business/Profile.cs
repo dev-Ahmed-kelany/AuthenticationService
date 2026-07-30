@@ -17,12 +17,12 @@ namespace AuthenticationService.Business
 
     public class Profile
     {
-        public static Result<ProfileDetailsDto> GetProfile(int userId)
+        public static async Task<Result<ProfileDetailsDto>> GetProfileAsync(int userId)
         {
             var validationResult = UserValidator.ValidateId(userId);
             if (!validationResult.IsSuccess) return new Result<ProfileDetailsDto>(validationResult);
 
-            var profile = ProfileRepository.GetProfile(userId);
+            var profile = await ProfileRepository.GetProfileAsync(userId);
             if (profile == null) return Result<ProfileDetailsDto>.Failure(ProfileErrors.NotFound);
 
             return Result<ProfileDetailsDto>.Success(profile);

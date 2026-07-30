@@ -13,11 +13,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult Login(AuthenticationRequestDto request)
+        public async Task<ActionResult> LoginAsync(AuthenticationRequestDto request)
         {
             try
             {
-                var result = Authentication.Login(request);
+                var result = await Authentication.LoginAsync(request);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -34,11 +34,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult VerifyCredentials(AuthenticationRequestDto request)
+        public async Task<ActionResult> VerifyCredentialsAsync(AuthenticationRequestDto request)
         {
             try
             {
-                var result = Authentication.VerifyCredentials(request);
+                var result = await Authentication.VerifyCredentialsAsync(request);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -55,11 +55,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult ChangePassword(ChangePasswordDto request)
+        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordDto request)
         {
             try
             {
-                var result = Authentication.ChangePassword(request);
+                var result = await Authentication.ChangePasswordAsync(request);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });

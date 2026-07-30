@@ -10,7 +10,7 @@ namespace AuthenticationService.Repository
 {
     public class StatusRepository
     {
-        public static bool StatusExists(int statusId)
+        public static async Task<bool> ExistsAsync(int statusId)
         {
             bool exists = false;
 
@@ -22,16 +22,10 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@StatusID", statusId);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                    
                 }
             }
 

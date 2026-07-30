@@ -2,6 +2,7 @@
 using AuthenticationService.Business;
 using AuthenticationService.Dtos.AuditLogs;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Threading.Tasks;
 
 namespace AuthenticationService.API.Controllers
 {
@@ -14,11 +15,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<AuditLogDetailsDto> GetAuditLogByID(int id)
+        public async Task<ActionResult<AuditLogDetailsDto>> GetByIDAsync(int id)
         {
             try
             {
-                var result = AuditLog.Find(id);
+                var result = await AuditLog.GetByIDAsync(id);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -35,11 +36,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<AuditLogDetailsDto>> GetAllAuditLogs()
+        public async Task<ActionResult<List<AuditLogDetailsDto>>> GetAllAsync()
         {
             try
             {
-                var result = AuditLog.GetAll();
+                var result = await AuditLog.GetAllAsync();
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -59,11 +60,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<AuditLogDetailsDto>> GetAuditLogsByUserID(int userId)
+        public async Task<ActionResult<List<AuditLogDetailsDto>>> GetByUserIDAsync(int userId)
         {
             try
             {
-                var result = AuditLog.GetByUserID(userId);
+                var result = await AuditLog.GetByUserIDAsync(userId);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -80,11 +81,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<AuditLogDetailsDto>> SearchAuditLogs(string searchText)
+        public async Task<ActionResult<List<AuditLogDetailsDto>>> SearchAsync(string searchText)
         {
             try
             {
-                var result = AuditLog.Search(searchText);
+                var result = await AuditLog.SearchAsync(searchText);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -101,11 +102,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<AuditLogDetailsDto>> FilterAuditLogs(int? entityId, int? operationTypeId)
+        public async Task<ActionResult<List<AuditLogDetailsDto>>> FilterAsync(int? entityId, int? operationTypeId)
         {
             try 
             {
-                var result = AuditLog.Filter(entityId, operationTypeId);
+                var result = await AuditLog.FilterAsync(entityId, operationTypeId);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });

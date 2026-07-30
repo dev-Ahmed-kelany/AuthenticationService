@@ -15,11 +15,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<LoginHistoryDetailsDto> GetLoginHistoryByID(int id)
+        public async Task<ActionResult<LoginHistoryDetailsDto>> GetByIDAsync(int id)
         {
             try
             {
-                var result = LoginHistory.Find(id);
+                var result = await LoginHistory.GetByIDAsync(id);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -37,11 +37,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<LoginHistoryDetailsDto>> GetAllLoginHistory()
+        public async Task<ActionResult<List<LoginHistoryDetailsDto>>> GetAllAsync()
         {
             try
             {
-                var result = LoginHistory.GetAll();
+                var result = await LoginHistory.GetAllAsync();
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -62,11 +62,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<LoginHistoryDetailsDto>> GetLoginHistoryByUserID(int userId)
+        public async Task<ActionResult<List<LoginHistoryDetailsDto>>> GetByUserID(int userId)
         {
             try
             {
-                var result = LoginHistory.GetByUserID(userId);
+                var result = await LoginHistory.GetByUserIDAsync(userId);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -83,11 +83,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<LoginHistoryDetailsDto>> SearchLoginHistory(string searchText)
+        public async Task<ActionResult<List<LoginHistoryDetailsDto>>> SearchAsync(string searchText)
         {
             try
             {
-                var result = LoginHistory.Search(searchText);
+                var result = await LoginHistory.SearchAsync(searchText);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -104,11 +104,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<LoginHistoryDetailsDto>> FilterLoginHistoryByStatus(byte status)
+        public async Task<ActionResult<List<LoginHistoryDetailsDto>>> FilterByStatusAsync(byte status)
         {
             try
             {
-                var result = LoginHistory.FilterByStatus(status);
+                var result = await LoginHistory.FilterByStatusAsync(status);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });

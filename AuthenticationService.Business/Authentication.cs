@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.Repository;
 using AuthenticationService.Dtos.Authentication;
 using AuthenticationService.Business.Validation;
+using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
@@ -23,12 +24,12 @@ namespace AuthenticationService.Business
             return statusID == 1;
         }
 
-        private static Result<AuthenticationUserDto> AuthenticateUser(AuthenticationRequestDto request)
+        private static async Task<Result<AuthenticationUserDto>> AuthenticateUserAsync(AuthenticationRequestDto request)
         {
             var validationResult = AuthenticationValidator.ValidateAuthenticate(request);
             if (!validationResult.IsSuccess) return new Result<AuthenticationUserDto>(validationResult);
 
-            AuthenticationUserDto? user = AuthenticationRepository.GetAuthenticationUserByUsername(request.Username);
+            AuthenticationUserDto? user = await AuthenticationRepository.GetAuthenticationUserByUsernameAsync(request.Username);
             if (user == null) return Result<AuthenticationUserDto>.Failure(AuthenticationErrors.InvalidCredentials);
 
             if (!PasswordMatches(request.Password, user.PasswordHash)) return Result<AuthenticationUserDto>.Failure(AuthenticationErrors.InvalidCredentials);
@@ -38,16 +39,16 @@ namespace AuthenticationService.Business
             return Result<AuthenticationUserDto>.Success(user);
         }
 
-        public static Result Login(AuthenticationRequestDto request) { return AuthenticateUser(request); }
+        public static async Task<Result> LoginAsync(AuthenticationRequestDto request) { return await AuthenticateUserAsync(request); }
 
-        public static Result VerifyCredentials(AuthenticationRequestDto request) { return AuthenticateUser(request); }
+        public static async Task<Result> VerifyCredentialsAsync(AuthenticationRequestDto request) { return await AuthenticateUserAsync(request); }
 
-        public static Result ChangePassword(ChangePasswordDto request)
+        public static async Task<Result> ChangePasswordAsync(ChangePasswordDto request)
         {
-            var authenticationResult = AuthenticateUser(new AuthenticationRequestDto { Username = request.Username, Password = request.CurrentPassword});
+            var authenticationResult = await AuthenticateUserAsync(new AuthenticationRequestDto { Username = request.Username, Password = request.CurrentPassword});
             if (!authenticationResult.IsSuccess) return authenticationResult;
 
-            bool isChanged = AuthenticationRepository.ChangePassword(userId: authenticationResult.Data.ID, newPasswordHash: request.NewPassword);
+            bool isChanged = await AuthenticationRepository.ChangePasswordAsync(userId: authenticationResult.Data.ID, newPasswordHash: request.NewPassword);
             if (!isChanged) Result.Failure(AuthenticationErrors.InvalidCredentials);
 
             return Result.Success();

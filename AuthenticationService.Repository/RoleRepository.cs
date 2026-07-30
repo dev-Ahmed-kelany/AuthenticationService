@@ -6,7 +6,7 @@ namespace AuthenticationService.Repository
 {
     public class RoleRepository
     {
-        public static int AddRole(SaveRoleDto role)
+        public static async Task<int> AddAsync(SaveRoleDto role)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -25,9 +25,9 @@ namespace AuthenticationService.Repository
                     };
                     command.Parameters.Add(outputNewRoleID);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)command.Parameters["@NewRoleID"].Value;
 
@@ -35,7 +35,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static bool UpdateRoleByID(int id, SaveRoleDto role)
+        public static async Task<bool> UpdateByIDAsync(int id, SaveRoleDto role)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -55,9 +55,9 @@ namespace AuthenticationService.Repository
                     };
                     command.Parameters.Add(outputRowsAffected);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)command.Parameters["@RowsAffected"].Value == 1;
 
@@ -65,7 +65,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static List<RoleDetailsDto> SearchRolesByName(string searchText)
+        public static async Task<List<RoleDetailsDto>> SearchByNameAsync(string searchText)
         {
             List<RoleDetailsDto> roles = new List<RoleDetailsDto>();
 
@@ -77,11 +77,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@SearchText", searchText);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             RoleDetailsDto role = new RoleDetailsDto();
 
@@ -98,7 +98,7 @@ namespace AuthenticationService.Repository
             return roles;
         }
 
-        public static RoleDetailsDto? GetRoleByID(int id)
+        public static async Task<RoleDetailsDto?> GetByIDAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -108,11 +108,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@ID", id);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             return new RoleDetailsDto
                             {
@@ -128,7 +128,7 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static List<RoleDetailsDto> GetAllRoles()
+        public static async Task<List<RoleDetailsDto>> GetAllAsync()
         {
             List<RoleDetailsDto> roles = new List<RoleDetailsDto>();
 
@@ -138,11 +138,11 @@ namespace AuthenticationService.Repository
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             RoleDetailsDto role = new RoleDetailsDto();
 
@@ -159,7 +159,7 @@ namespace AuthenticationService.Repository
             return roles;
         }
 
-        public static bool RoleExists(int roleId)
+        public static async Task<bool> ExistsAsync(int roleId)
         {
             bool exists = false;
 
@@ -171,23 +171,17 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@RoleID", roleId);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                   
                 }
             }
 
             return exists;
         }
 
-        public static bool RoleNameExists(string roleName)
+        public static async Task<bool> RoleNameExistsAsync(string roleName)
         {
             bool exists = false;
 
@@ -199,23 +193,17 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@RoleName", roleName);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                    
                 }
             }
 
             return exists;
         }
 
-        public static bool RoleNameExists(string roleName, int excludeRoleId)
+        public static async Task<bool> RoleNameExistsAsync(string roleName, int excludeRoleId)
         {
             bool exists = false;
 
@@ -228,16 +216,9 @@ namespace AuthenticationService.Repository
                     command.Parameters.AddWithValue("@RoleName", roleName);
                     command.Parameters.AddWithValue("@ExcludeRoleID", excludeRoleId);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
                 }
             }
 

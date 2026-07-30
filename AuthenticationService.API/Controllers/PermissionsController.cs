@@ -16,11 +16,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<int> AddPermission(CreatePermissionDto permission)
+        public async Task<ActionResult<int>> AddAsync(CreatePermissionDto permission)
         {
             try
             {
-                var result = Permission.AddPermission(permission);
+                var result = await Permission.AddAsync(permission);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -39,11 +39,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult UpdatePermissionByID(int id, UpdatePermissionDto permission)
+        public async Task<ActionResult> UpdateByIDAsync(int id, UpdatePermissionDto permission)
         {
             try
             {
-                var result = Permission.UpdatePermissionByID(id, permission);
+                var result = await Permission.UpdateByIDAsync(id, permission);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -60,11 +60,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<PermissionDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<PermissionDetailsDto>> SearchPermissionsByName(string searchText)
+        public async Task<ActionResult<List<PermissionDetailsDto>>> SearchByNameAsync(string searchText)
         {
             try
             {
-                var result = Permission.SearchPermissionsByName(searchText);
+                var result = await Permission.SearchByNameAsync(searchText);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -82,11 +82,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<PermissionDetailsDto> GetPermissionByID(int id)
+        public async Task<ActionResult<PermissionDetailsDto>> GetByIDAsync(int id)
         {
             try
             {
-                var result = Permission.GetPermissionByID(id);
+                var result = await Permission.GetByIDAsync(id);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -103,11 +103,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<PermissionDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<PermissionDetailsDto>> GetAllPermissions()
+        public async Task<ActionResult<List<PermissionDetailsDto>>> GetAllAsync()
         {
             try
             {
-                var result = Permission.GetAllPermissions();
+                var result = await Permission.GetAllAsync();
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });

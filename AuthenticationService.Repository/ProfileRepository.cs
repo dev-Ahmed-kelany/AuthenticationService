@@ -7,7 +7,7 @@ namespace AuthenticationService.Repository
     
     public class ProfileRepository
     {
-        public static ProfileDetailsDto? GetProfile(int userId)
+        public static async Task<ProfileDetailsDto?> GetProfileAsync(int userId)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -17,11 +17,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@UserID", userId);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             return new ProfileDetailsDto
                             {

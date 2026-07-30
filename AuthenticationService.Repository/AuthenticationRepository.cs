@@ -6,7 +6,7 @@ namespace AuthenticationService.Repository
 {
     public class AuthenticationRepository
     {
-        public static AuthenticationUserDto? GetAuthenticationUserByUsername(string username)
+        public static async Task<AuthenticationUserDto?> GetAuthenticationUserByUsernameAsync(string username)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -16,11 +16,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@Username", username);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             return new AuthenticationUserDto()
                             {
@@ -40,7 +40,7 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static bool ChangePassword(int userId, string newPasswordHash)
+        public static async Task<bool> ChangePasswordAsync(int userId, string newPasswordHash)
         {
             int rowsAffected = 0;
 
@@ -62,9 +62,9 @@ namespace AuthenticationService.Repository
 
                     try
                     {
-                        connection.Open();
+                        await connection.OpenAsync();
 
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
 
                         rowsAffected = (int)rowsAffectedParameter.Value;
                     }

@@ -4,6 +4,6 @@ namespace AuthenticationService.Business
 {
     public class Status
     {
-        public static bool StatusExists(int statusId) { return StatusRepository.StatusExists(statusId); }
+        public static async Task<bool> ExistsAsync(int statusId) { return await StatusRepository.ExistsAsync(statusId); }
     }
 }

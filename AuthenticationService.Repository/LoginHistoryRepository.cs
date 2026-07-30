@@ -6,7 +6,7 @@ namespace AuthenticationService.Repository
 {
     public class LoginHistoryRepository
     {
-        public static int AddLoginHistory(CreateLoginHistoryDto loginHistory)
+        public static async Task<int> AddAsync(CreateLoginHistoryDto loginHistory)
         {
             int newLoginHistoryID = -1;
 
@@ -48,9 +48,9 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.Add(outputParameter);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     newLoginHistoryID = (int)outputParameter.Value;
                 }
@@ -76,7 +76,7 @@ namespace AuthenticationService.Repository
             };
         }
 
-        public static LoginHistoryDetailsDto? GetLoginHistoryByID(int id)
+        public static async Task<LoginHistoryDetailsDto?> GetByIDAsync(int id)
         {
             LoginHistoryDetailsDto? loginHistory = null;
 
@@ -87,11 +87,11 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@ID", id);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             loginHistory = _MapLoginHistoryDTO(reader);
                         }
@@ -102,7 +102,7 @@ namespace AuthenticationService.Repository
             return loginHistory;
         }
 
-        public static List<LoginHistoryDetailsDto> GetAllLoginHistory()
+        public static async Task<List<LoginHistoryDetailsDto>> GetAllAsync()
         {
             List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
@@ -112,11 +112,11 @@ namespace AuthenticationService.Repository
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             loginHistoryList.Add(_MapLoginHistoryDTO(reader));
                         }
@@ -127,7 +127,7 @@ namespace AuthenticationService.Repository
             return loginHistoryList;
         }
 
-        public static List<LoginHistoryDetailsDto> GetLoginHistoryByUserID(int userId)
+        public static async Task<List<LoginHistoryDetailsDto>> GetByUserIDAsync(int userId)
         {
             List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
@@ -138,11 +138,11 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@UserID", userId);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             loginHistoryList.Add(_MapLoginHistoryDTO(reader));
                         }
@@ -153,7 +153,7 @@ namespace AuthenticationService.Repository
             return loginHistoryList;
         }
 
-        public static List<LoginHistoryDetailsDto> SearchLoginHistory(string searchText)
+        public static async Task<List<LoginHistoryDetailsDto>> SearchAsync(string searchText)
         {
             List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
@@ -164,11 +164,11 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@SearchText", searchText);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             loginHistoryList.Add(_MapLoginHistoryDTO(reader));
                         }
@@ -179,7 +179,7 @@ namespace AuthenticationService.Repository
             return loginHistoryList;
         }
 
-        public static List<LoginHistoryDetailsDto> FilterLoginHistoryByStatus(byte loginStatus)
+        public static async Task<List<LoginHistoryDetailsDto>> FilterByStatusAsync(byte loginStatus)
         {
             List<LoginHistoryDetailsDto> loginHistoryList = new List<LoginHistoryDetailsDto>();
 
@@ -190,11 +190,11 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@Status", loginStatus);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             loginHistoryList.Add(_MapLoginHistoryDTO(reader));
                         }

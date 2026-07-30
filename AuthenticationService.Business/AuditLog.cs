@@ -1,5 +1,6 @@
 ﻿using AuthenticationService.Repository;
 using AuthenticationService.Dtos.AuditLogs;
+using System.Threading.Tasks;
 
 namespace AuthenticationService.Business
 {
@@ -17,12 +18,12 @@ namespace AuthenticationService.Business
 
     public static class AuditLog
     {
-        public static Result<int> Add(CreateAuditLogDto auditLog)
+        public static async Task<Result<int>> AddAsync(CreateAuditLogDto auditLog)
         {
             if (auditLog == null)
                 return Result<int>.Failure(AuditLogErrors.IsNull);
 
-            int newAuditLogId = AuditLogRepository.Add(auditLog);
+            int newAuditLogId = await AuditLogRepository.AddAsync(auditLog);
 
             if (newAuditLogId == -1)
                 return Result<int>.Failure(AuditLogErrors.NotCreated);
@@ -30,12 +31,12 @@ namespace AuthenticationService.Business
             return Result<int>.Success(newAuditLogId);
         }
 
-        public static Result<AuditLogDetailsDto> Find(int id)
+        public static async Task<Result<AuditLogDetailsDto>> GetByIDAsync(int id)
         {
             if (id <= 0)
                 return Result<AuditLogDetailsDto>.Failure(AuditLogErrors.InvalidID);
 
-            var auditLog = AuditLogRepository.GetAuditLogByID(id);
+            var auditLog = await AuditLogRepository.GetByIDAsync(id);
 
             if (auditLog == null)
                 return Result<AuditLogDetailsDto>.Failure(AuditLogErrors.NotFound);
@@ -43,31 +44,31 @@ namespace AuthenticationService.Business
             return Result<AuditLogDetailsDto>.Success(auditLog);
         }
 
-        public static Result<List<AuditLogDetailsDto>> GetAll()
+        public static async Task<Result<List<AuditLogDetailsDto>>> GetAllAsync()
         {
-            List<AuditLogDetailsDto> auditLogList = AuditLogRepository.GetAllAuditLogs();
+            List<AuditLogDetailsDto> auditLogList = await AuditLogRepository.GetAllAsync();
 
             return Result<List<AuditLogDetailsDto>>.Success(auditLogList);
         }
 
-        public static Result<List<AuditLogDetailsDto>> GetByUserID(int userId)
+        public static async Task<Result<List<AuditLogDetailsDto>>> GetByUserIDAsync(int userId)
         {
             if (userId <= 0)
                 return Result<List<AuditLogDetailsDto>>.Failure(AuditLogErrors.InvalidUserID);
 
-            List<AuditLogDetailsDto> auditLogList = AuditLogRepository.GetAuditLogsByUserID(userId);
+            List<AuditLogDetailsDto> auditLogList = await AuditLogRepository.GetByUserIDAsync(userId);
 
             return Result<List<AuditLogDetailsDto>>.Success(auditLogList);
         }
 
-        public static Result<List<AuditLogDetailsDto>> Search(string searchText)
+        public static async Task<Result<List<AuditLogDetailsDto>>> SearchAsync(string searchText)
         {
-            List<AuditLogDetailsDto> auditLogList = AuditLogRepository.SearchAuditLogs(searchText);
+            List<AuditLogDetailsDto> auditLogList = await AuditLogRepository.SearchAsync(searchText);
 
             return Result<List<AuditLogDetailsDto>>.Success(auditLogList);
         }
 
-        public static Result<List<AuditLogDetailsDto>> Filter(int? entityId, int? operationTypeId)
+        public static async Task<Result<List<AuditLogDetailsDto>>> FilterAsync(int? entityId, int? operationTypeId)
         {
             if (entityId <= 0)
                 return Result<List<AuditLogDetailsDto>>.Failure(AuditLogErrors.InvalidEntityID);
@@ -75,7 +76,7 @@ namespace AuthenticationService.Business
             if (operationTypeId <= 0)
                 return Result<List<AuditLogDetailsDto>>.Failure(AuditLogErrors.InvalidOperationTypeID);
 
-            List<AuditLogDetailsDto> auditLogList = AuditLogRepository.FilterAuditLogs(entityId, operationTypeId);
+            List<AuditLogDetailsDto> auditLogList = await AuditLogRepository.FilterAsync(entityId, operationTypeId);
 
             return Result<List<AuditLogDetailsDto>>.Success(auditLogList);
         }

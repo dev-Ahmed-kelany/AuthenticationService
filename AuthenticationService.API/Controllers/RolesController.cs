@@ -13,11 +13,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<int> AddRole(SaveRoleDto role)
+        public async Task<ActionResult<int>> AddAsync(SaveRoleDto role)
         {
             try
             {
-                var result = Role.AddRole(role);
+                var result = await Role.AddAsync(role);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -36,11 +36,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<bool> UpdateRoleByID(int id, SaveRoleDto role)
+        public async Task<ActionResult<bool>> UpdateByIDAsync(int id, SaveRoleDto role)
         {
             try
             {
-                var result = Role.UpdateRoleByID(id, role);
+                var result = await Role.UpdateByIDAsync(id, role);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -57,11 +57,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<RoleDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<RoleDetailsDto>> SearchRolesByName(string searchText)
+        public async Task<ActionResult<List<RoleDetailsDto>>> SearchByNameAsync(string searchText)
         {
             try
             {
-                var result = Role.SearchRolesByName(searchText);
+                var result = await Role.SearchByNameAsync(searchText);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -79,11 +79,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<RoleDetailsDto> GetRoleByID(int id)
+        public async Task<ActionResult<RoleDetailsDto>> GetByIDAsync(int id)
         {
             try
             {
-                var result = Role.GetRoleByID(id);
+                var result = await Role.GetByIDAsync(id);
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
@@ -100,11 +100,11 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<RoleDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<List<RoleDetailsDto>> GetAllRoles()
+        public async Task<ActionResult<List<RoleDetailsDto>>> GetAllAsync()
         {
             try
             {
-                var result = Role.GetAllRoles();
+                var result = await Role.GetAllAsync();
 
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });

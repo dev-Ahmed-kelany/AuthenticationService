@@ -6,7 +6,7 @@ namespace AuthenticationService.Repository
 {
    public class PermissionRepository
     {
-        public static int AddPermission(CreatePermissionDto permission)
+        public static async Task<int> AddAsync(CreatePermissionDto permission)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -25,9 +25,9 @@ namespace AuthenticationService.Repository
                     };
                     command.Parameters.Add(outputNewPermissionID);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)command.Parameters["@NewPermissionID"].Value;
 
@@ -35,7 +35,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static bool UpdatePermissionByID(int id, UpdatePermissionDto permission)
+        public static async Task<bool> UpdateByIDAsync(int id, UpdatePermissionDto permission)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -54,9 +54,9 @@ namespace AuthenticationService.Repository
                     };
                     command.Parameters.Add(outputRowsAffected);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return (int)command.Parameters["@RowsAffected"].Value == 1;
 
@@ -64,7 +64,7 @@ namespace AuthenticationService.Repository
             }
         }
 
-        public static List<PermissionDetailsDto> SearchPermissionsByName(string searchText)
+        public static async Task<List<PermissionDetailsDto>> SearchByNameAsync(string searchText)
         {
             List<PermissionDetailsDto> permissions = new List<PermissionDetailsDto>();
 
@@ -76,11 +76,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@SearchText", searchText);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             PermissionDetailsDto permission = new PermissionDetailsDto();
 
@@ -97,7 +97,7 @@ namespace AuthenticationService.Repository
             return permissions;
         }
 
-        public static PermissionDetailsDto? GetPermissionByID(int id)
+        public static async Task<PermissionDetailsDto?> GetByIDAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {
@@ -107,11 +107,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@ID", id);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             return new PermissionDetailsDto
                             {
@@ -127,7 +127,7 @@ namespace AuthenticationService.Repository
             return null;
         }
 
-        public static List<PermissionDetailsDto> GetAllPermissions()
+        public static async Task<List<PermissionDetailsDto>> GetAllAsync()
         {
             List<PermissionDetailsDto> permissions = new List<PermissionDetailsDto>();
 
@@ -137,11 +137,11 @@ namespace AuthenticationService.Repository
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             PermissionDetailsDto permission = new PermissionDetailsDto();
 
@@ -158,7 +158,7 @@ namespace AuthenticationService.Repository
             return permissions;
         }
 
-        public static bool PermissionExists(int permissionID)
+        public static async Task<bool> ExistsAsync(int permissionID)
         {
             bool exists = false;
 
@@ -170,23 +170,17 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@PermissionID", permissionID);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                   
                 }
             }
 
             return exists;
         }
 
-        public static bool PermissionNameExists(string permissionName)
+        public static async Task<bool> PermissionNameExistsAsync(string permissionName)
         {
             bool exists = false;
 
@@ -198,23 +192,17 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@PermissionName", permissionName);
 
-                    try
-                    {
-                        connection.Open();
+                    await connection.OpenAsync();
 
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                   
                 }
             }
 
             return exists;
         }
 
-        public static bool BitValueExists(long bitValue)
+        public static async Task<bool> BitValueExistsAsync(long bitValue)
         {
             bool exists = false;
 
@@ -225,17 +213,11 @@ namespace AuthenticationService.Repository
                     command.CommandType = CommandType.StoredProcedure;
 
                     command.Parameters.AddWithValue("@BitValue", bitValue);
+                    
+                    await connection.OpenAsync();
 
-                    try
-                    {
-                        connection.Open();
-
-                        exists = Convert.ToBoolean(command.ExecuteScalar());
-                    }
-                    catch (Exception)
-                    {
-                        // Error Handling will be added later.
-                    }
+                    exists = Convert.ToBoolean(await command.ExecuteScalarAsync());
+                    
                 }
             }
 

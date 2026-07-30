@@ -19,101 +19,101 @@ namespace AuthenticationService.Business
 
     public class User
     {
-        public static bool UserExists(int userId) { return UserRepository.UserExists(userId); }
-        public static bool UsernameExists(string username) { return UserRepository.UsernameExists(username); }
-        public static bool UsernameExists(string username, int excludeUserId) { return UserRepository.UsernameExists(username, excludeUserId); }
-        public static bool EmailExists(string email) { return UserRepository.EmailExists(email); }
-        public static bool EmailExists(string email, int excludeUserId) { return UserRepository.EmailExists(email, excludeUserId); }
+        public static async Task<bool> ExistsAsync(int userId) { return await UserRepository.ExistsAsync(userId); }
+        public static async Task<bool> UsernameExistsAsync(string username) { return await UserRepository.UsernameExistsAsync(username); }
+        public static async Task<bool> UsernameExistsAsync(string username, int excludeUserId) { return await UserRepository.UsernameExistsAsync(username, excludeUserId); }
+        public static async Task<bool> EmailExistsAsync(string email) { return await UserRepository.EmailExistsAsync(email); }
+        public static async Task<bool> EmailExistsAsync(string email, int excludeUserId) { return await UserRepository.EmailExistsAsync(email, excludeUserId); }
 
-        public static Result<int> AddUser(CreateUserDto user)
+        public static async Task<Result<int>> AddAsync(CreateUserDto user)
         {
             var validationResult = UserValidator.ValidateCreate(user);
             if (!validationResult.IsSuccess) return new Result<int>(validationResult);
 
-            if (UsernameExists(user.Username)) return Result<int>.Failure(UserErrors.UsernameAlreadyExists);
-            if (EmailExists(user.Email)) return Result<int>.Failure(UserErrors.EmailAlreadyExists);
-            if (!Role.RoleExists(user.RoleID)) return Result<int>.Failure(UserErrors.RoleNotFound);
-            if (!Status.StatusExists(user.StatusID)) return Result<int>.Failure(UserErrors.StatusNotFound);
+            if (await UsernameExistsAsync(user.Username)) return Result<int>.Failure(UserErrors.UsernameAlreadyExists);
+            if (await EmailExistsAsync(user.Email)) return Result<int>.Failure(UserErrors.EmailAlreadyExists);
+            if (!await Role.ExistsAsync(user.RoleID)) return Result<int>.Failure(UserErrors.RoleNotFound);
+            if (!await Status.ExistsAsync(user.StatusID)) return Result<int>.Failure(UserErrors.StatusNotFound);
 
-            var newUserId = UserRepository.AddUser(user);
+            var newUserId = await UserRepository.AddAsync(user);
 
             if (newUserId == -1) return Result<int>.Failure(UserErrors.NotCreated);
 
             return Result<int>.Success(newUserId);
         }
 
-        public static Result UpdateUserByID(int id, UpdateUserDto user)
+        public static async Task<Result> UpdateByIDAsync(int id, UpdateUserDto user)
         {
             var validationResult = UserValidator.ValidateUpdate(id, user);
             if (!validationResult.IsSuccess) return validationResult;
 
-            if (!UserExists(id)) return Result.Failure(UserErrors.NotFound);
-            if (UsernameExists(user.Username, id)) return Result.Failure(UserErrors.UsernameAlreadyExists);
-            if (EmailExists(user.Email, id)) return Result.Failure(UserErrors.EmailAlreadyExists);
-            if (!Role.RoleExists(user.RoleID)) return Result.Failure(UserErrors.RoleNotFound);
-            if (!Status.StatusExists(user.StatusID)) return Result.Failure(UserErrors.StatusNotFound);
+            if (!await ExistsAsync(id)) return Result.Failure(UserErrors.NotFound);
+            if (await UsernameExistsAsync(user.Username, id)) return Result.Failure(UserErrors.UsernameAlreadyExists);
+            if (await EmailExistsAsync(user.Email, id)) return Result.Failure(UserErrors.EmailAlreadyExists);
+            if (!await Role.ExistsAsync(user.RoleID)) return Result.Failure(UserErrors.RoleNotFound);
+            if (!await Status.ExistsAsync(user.StatusID)) return Result.Failure(UserErrors.StatusNotFound);
 
-            var result = UserRepository.UpdateUserByID(id, user);
+            var result = await UserRepository.UpdateByIDAsync(id, user);
 
             if (!result) return Result.Failure(UserErrors.NotUpdated);
 
             return Result.Success();
         }
 
-        public static Result DeleteUserByID(int id)
+        public static async Task<Result> DeleteByIDAsync(int id)
         {
             var validationResult = UserValidator.ValidateId(id);
             if (!validationResult.IsSuccess) return validationResult;
 
-            if (!UserExists(id)) return Result.Failure(UserErrors.NotFound);
+            if (!await ExistsAsync(id)) return Result.Failure(UserErrors.NotFound);
 
-            var result = UserRepository.DeleteUserByID(id);
+            var result = await UserRepository.DeleteByIDAsync(id);
             if (!result) return Result.Failure(UserErrors.NotDeleted);
 
             return Result.Success();
         }
 
-        public static Result<List<UserDetailsDto>> SearchUsers(string searchText)
+        public static async Task<Result<List<UserDetailsDto>>> SearchAsync(string searchText)
         {
-            var usersList = UserRepository.SearchUsers(searchText);
+            var usersList = await UserRepository.SearchAsync(searchText);
 
             return Result<List<UserDetailsDto>>.Success(usersList);
         }
 
-        public static Result<List<UserDetailsDto>> FilterUsersByRoleID(int roleId)
+        public static async Task<Result<List<UserDetailsDto>>> FilterByRoleIDAsync(int roleId)
         {
             var validationResult = UserValidator.ValidateRoleId(roleId);
             if (!validationResult.IsSuccess) return new Result<List<UserDetailsDto>>(validationResult);
 
-            var usersList = UserRepository.FilterUsersByRoleID(roleId);
+            var usersList = await UserRepository.FilterByRoleIDAsync(roleId);
 
             return Result<List<UserDetailsDto>>.Success(usersList);
         }
 
-        public static Result<List<UserDetailsDto>> FilterUsersByStatusID(int statusId)
+        public static async Task<Result<List<UserDetailsDto>>> FilterByStatusIDAsync(int statusId)
         {
             var validationResult = UserValidator.ValidateStatusId(statusId);
             if (!validationResult.IsSuccess) return new Result<List<UserDetailsDto>>(validationResult);
 
-            var usersList = UserRepository.FilterUsersByStatusID(statusId);
+            var usersList = await UserRepository.FilterByStatusIDAsync(statusId);
 
             return Result<List<UserDetailsDto>>.Success(usersList);
 
         }
 
-        public static Result<List<UserDetailsDto>> GetAllUsers()
+        public static async Task<Result<List<UserDetailsDto>>> GetAllAsync()
         {
-            var usersList = UserRepository.GetAllUsers();
+            var usersList = await UserRepository.GetAllAsync();
 
             return Result<List<UserDetailsDto>>.Success(usersList);
         }
 
-        public static Result<UserDetailsDto> GetUserByID(int id)
+        public static async Task<Result<UserDetailsDto>> GetByIDAsync(int id)
         {
             var validationResult = UserValidator.ValidateId(id);
             if (!validationResult.IsSuccess) return new Result<UserDetailsDto>(validationResult);
 
-            var user = UserRepository.GetUserByID(id);
+            var user = await UserRepository.GetByIDAsync(id);
             if (user == null) return Result<UserDetailsDto>.Failure(UserErrors.NotFound);
 
             return Result<UserDetailsDto>.Success(user);

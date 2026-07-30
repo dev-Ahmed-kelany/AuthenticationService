@@ -22,7 +22,7 @@ namespace AuthenticationService.Repository
             };
         }
 
-        public static int Add(CreateAuditLogDto auditLog)
+        public static async Task<int> AddAsync(CreateAuditLogDto auditLog)
         {
             int newAuditLogID = -1;
 
@@ -43,9 +43,9 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.Add(outputParameter);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     newAuditLogID = (int)outputParameter.Value;
                 }
@@ -54,7 +54,7 @@ namespace AuthenticationService.Repository
             return newAuditLogID;
         }
 
-        public static AuditLogDetailsDto? GetAuditLogByID(int id)
+        public static async Task<AuditLogDetailsDto?> GetByIDAsync(int id)
         {
             AuditLogDetailsDto? auditLog = null;
 
@@ -66,11 +66,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@ID", id);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                             auditLog = _MapAuditLogDTO(reader);
                     }
                 }
@@ -79,7 +79,7 @@ namespace AuthenticationService.Repository
             return auditLog;
         }
 
-        public static List<AuditLogDetailsDto> GetAllAuditLogs()
+        public static async Task<List<AuditLogDetailsDto>> GetAllAsync()
         {
             List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
@@ -89,11 +89,11 @@ namespace AuthenticationService.Repository
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             auditLogs.Add(_MapAuditLogDTO(reader));
                         }
@@ -104,7 +104,7 @@ namespace AuthenticationService.Repository
             return auditLogs;
         }
 
-        public static List<AuditLogDetailsDto> GetAuditLogsByUserID(int userId)
+        public static async Task<List<AuditLogDetailsDto>> GetByUserIDAsync(int userId)
         {
             List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
@@ -116,11 +116,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@UserID", userId);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             auditLogs.Add(_MapAuditLogDTO(reader));
                         }
@@ -131,7 +131,7 @@ namespace AuthenticationService.Repository
             return auditLogs;
         }
 
-        public static List<AuditLogDetailsDto> SearchAuditLogs(string searchText)
+        public static async Task<List<AuditLogDetailsDto>> SearchAsync(string searchText)
         {
             List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
@@ -143,11 +143,11 @@ namespace AuthenticationService.Repository
 
                     command.Parameters.AddWithValue("@SearchText", searchText);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             auditLogs.Add(_MapAuditLogDTO(reader));
                         }
@@ -158,7 +158,7 @@ namespace AuthenticationService.Repository
             return auditLogs;
         }
 
-        public static List<AuditLogDetailsDto> FilterAuditLogs(int? entityId, int? operationTypeId)
+        public static async Task<List<AuditLogDetailsDto>> FilterAsync(int? entityId, int? operationTypeId)
         {
             List<AuditLogDetailsDto> auditLogs = new List<AuditLogDetailsDto>();
 
@@ -174,11 +174,11 @@ namespace AuthenticationService.Repository
                     command.Parameters.AddWithValue("@OperationTypeID",
                         operationTypeId.HasValue ? operationTypeId.Value : DBNull.Value);
 
-                    connection.Open();
+                    await connection.OpenAsync();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             auditLogs.Add(_MapAuditLogDTO(reader));
                         }

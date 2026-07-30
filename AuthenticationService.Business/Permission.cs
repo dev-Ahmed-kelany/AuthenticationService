@@ -16,69 +16,60 @@ namespace AuthenticationService.Business
 
     public class Permission
     {
-        public static bool PermissionExists(int permissionID)
-        {
-            return PermissionRepository.PermissionExists(permissionID);
-        }
+        public static async Task<bool> ExistsAsync(int permissionID) { return await PermissionRepository.ExistsAsync(permissionID); }
 
-        public static bool PermissionNameExists(string permissionName)
-        {
-            return PermissionRepository.PermissionNameExists(permissionName);
-        }
+        public static async Task<bool> PermissionNameExistsAsync(string permissionName) { return await PermissionRepository.PermissionNameExistsAsync(permissionName); }
 
-        public static bool BitValueExists(long bitValue)
-        {
-            return PermissionRepository.BitValueExists(bitValue);
-        }
+        public static async Task<bool> BitValueExistsAsync(long bitValue) { return await PermissionRepository.BitValueExistsAsync(bitValue); }
 
-        public static Result<int> AddPermission(CreatePermissionDto permission)
+        public static async Task<Result<int>> AddAsync(CreatePermissionDto permission)
         {
             var validationResult = PermissionValidator.ValidateCreate(permission);
             if (!validationResult.IsSuccess) return new Result<int>(validationResult);
 
-            if (PermissionNameExists(permission.Name)) return Result<int>.Failure(PermissionErrors.NameAlreadyExists);
-            if (BitValueExists(permission.BitValue)) return Result<int>.Failure(PermissionErrors.BitValueAlreadyExists);
+            if (await PermissionNameExistsAsync(permission.Name)) return Result<int>.Failure(PermissionErrors.NameAlreadyExists);
+            if (await BitValueExistsAsync(permission.BitValue)) return Result<int>.Failure(PermissionErrors.BitValueAlreadyExists);
 
-            int newPermissionId = PermissionRepository.AddPermission(permission);
+            int newPermissionId = await PermissionRepository.AddAsync(permission);
             if (newPermissionId == -1) return Result<int>.Failure(PermissionErrors.NotCreated);
 
             return Result<int>.Success(newPermissionId);
         }
 
-        public static Result UpdatePermissionByID(int id, UpdatePermissionDto permission)
+        public static async Task<Result> UpdateByIDAsync(int id, UpdatePermissionDto permission)
         {
             var validationResult = PermissionValidator.ValidateUpdate(id, permission);
             if (!validationResult.IsSuccess) return validationResult;
 
-            if (!PermissionExists(id)) return Result.Failure(PermissionErrors.NotFound);
-            if (PermissionNameExists(permission.Name)) return Result.Failure(PermissionErrors.NameAlreadyExists);
+            if (!await ExistsAsync(id)) return Result.Failure(PermissionErrors.NotFound);
+            if (await PermissionNameExistsAsync(permission.Name)) return Result.Failure(PermissionErrors.NameAlreadyExists);
          
-            bool result = PermissionRepository.UpdatePermissionByID(id, permission);
+            bool result = await PermissionRepository.UpdateByIDAsync(id, permission);
             if (!result) return Result.Failure(PermissionErrors.NotUpdated);
 
             return Result.Success();
         }
 
-        public static Result<List<PermissionDetailsDto>> SearchPermissionsByName(string searchText)
+        public static async Task<Result<List<PermissionDetailsDto>>> SearchByNameAsync(string searchText)
         {
-            var permissionsList = PermissionRepository.SearchPermissionsByName(searchText);
+            var permissionsList = await PermissionRepository.SearchByNameAsync(searchText);
 
             return Result<List<PermissionDetailsDto>>.Success(permissionsList);
         }
 
-        public static Result<PermissionDetailsDto> GetPermissionByID(int id)
+        public static async Task<Result<PermissionDetailsDto>> GetByIDAsync(int id)
         {
             if (id <= 0) return Result<PermissionDetailsDto>.Failure(PermissionErrors.InvalidID);
 
-            var permission = PermissionRepository.GetPermissionByID(id);
+            var permission = await PermissionRepository.GetByIDAsync(id);
             if (permission == null) return Result<PermissionDetailsDto>.Failure(PermissionErrors.NotFound);
 
             return Result<PermissionDetailsDto>.Success(permission);
         }
 
-        public static Result<List<PermissionDetailsDto>> GetAllPermissions()
+        public static async Task<Result<List<PermissionDetailsDto>>> GetAllAsync()
         {
-            var permissionsList = PermissionRepository.GetAllPermissions();
+            var permissionsList = await PermissionRepository.GetAllAsync();
 
             return Result<List<PermissionDetailsDto>>.Success(permissionsList);
         }
