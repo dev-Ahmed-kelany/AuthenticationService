@@ -9,5 +9,7 @@ namespace AuthenticationService.Repository
     public class Settings
     {
         public static string ConnectionString { get; set; } = string.Empty;
+        public static string SecretKey { get; set; } = null!;
+
     }
 }

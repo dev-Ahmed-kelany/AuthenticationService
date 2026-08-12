@@ -246,7 +246,7 @@ namespace AuthenticationService.Repository
             return users;
         }
 
-        public static async Task<UserDetailsDto>? GetByIDAsync(int id)
+        public static async Task<UserDetailsDto?> GetByIDAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
             {

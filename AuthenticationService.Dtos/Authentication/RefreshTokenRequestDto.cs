@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Dtos.Authentication
 {
-    public class LoginResponseDto
+    public class RefreshTokenRequestDto
     {
-        public string AccessToken { get; set; } = null!;
-
         public string RefreshToken { get; set; } = null!;
-
-        public DateTime AccessTokenExpiresAt { get; set; }
     }
 }

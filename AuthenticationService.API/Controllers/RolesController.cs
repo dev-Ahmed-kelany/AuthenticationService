@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AuthenticationService.Business;
 using AuthenticationService.Dtos.Roles;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthenticationService.API.Controllers
 {
-    [Route("api/Roles")]
+    [Authorize]
     [ApiController]
+    [Route("api/Roles")]
     public class RolesController : ControllerBase
     {
         [HttpPost(Name = "AddRole")]
+        [Authorize(Policy = "Roles.Create")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
@@ -22,7 +25,7 @@ namespace AuthenticationService.API.Controllers
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
 
-                return CreatedAtAction("GetPermissionByID", result.Data);
+                return CreatedAtRoute("GetRolesByIDAsync", new { id = result.Data }, new { id = result.Data });
             }
             catch (Exception ex)
             {
@@ -31,6 +34,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateRoleByID")]
+        [Authorize(Policy = "Roles.Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
@@ -54,6 +58,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Search")]
+        [Authorize(Policy = "Roles.Read")]
         [ProducesResponseType(typeof(List<RoleDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -74,8 +79,9 @@ namespace AuthenticationService.API.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetRoleByID")]
-        [ProducesResponseType(typeof(List<RoleDetailsDto>), StatusCodes.Status200OK)]
+        [HttpGet("{id}", Name = "GetRolesByIDAsync")]
+        [Authorize(Policy = "Roles.Read")]
+        [ProducesResponseType(typeof(RoleDetailsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -97,6 +103,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Roles.Read")]
         [ProducesResponseType(typeof(List<RoleDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

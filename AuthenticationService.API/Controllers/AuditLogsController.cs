@@ -3,14 +3,17 @@ using AuthenticationService.Business;
 using AuthenticationService.Dtos.AuditLogs;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthenticationService.API.Controllers
 {
-    [Route("api/AuditLogs")]
+    [Authorize]
     [ApiController]
+    [Route("api/AuditLogs")]
     public class AuditLogsController : ControllerBase
     {
         [HttpGet("{id}", Name = "GetAuditLogByID")]
+        [Authorize(Policy = "AuditLogs.Read")]
         [ProducesResponseType(typeof(AuditLogDetailsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
@@ -33,6 +36,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "AuditLogs.Read")]
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -57,6 +61,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("User/{userId}")]
+        [Authorize(Policy = "AuditLogs.Read")]
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -78,6 +83,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Search")]
+        [Authorize(Policy = "AuditLogs.Read")]
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -99,6 +105,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Filter")]
+        [Authorize(Policy = "AuditLogs.Read")]
         [ProducesResponseType(typeof(List<AuditLogDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

@@ -223,5 +223,35 @@ namespace AuthenticationService.Repository
 
             return exists;
         }
+
+        public static async Task<PermissionDetailsDto?> GetByNameAsync(string permissionName)
+        {
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_GetPermissionByName", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Name", permissionName);
+
+                    await connection.OpenAsync();
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new PermissionDetailsDto
+                            {
+                                ID = (int)reader["ID"],
+                                Name = (string)reader["Name"],
+                                BitValue = (long)reader["BitValue"]
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 }

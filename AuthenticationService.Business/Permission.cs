@@ -73,5 +73,18 @@ namespace AuthenticationService.Business
 
             return Result<List<PermissionDetailsDto>>.Success(permissionsList);
         }
+
+        public static async Task<Result<PermissionDetailsDto>> GetByNameAsync(string permissionName)
+        {
+            var validatePermissionName = PermissionValidator.ValidateName(permissionName);
+            if (!validatePermissionName.IsSuccess)
+                return new Result<PermissionDetailsDto>(validatePermissionName);
+
+            var permission = await PermissionRepository.GetByNameAsync(permissionName);
+
+            if (permission == null) return Result<PermissionDetailsDto>.Failure(PermissionErrors.NotFound);
+
+            return Result<PermissionDetailsDto>.Success(permission);
+        }
     }
 }

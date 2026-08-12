@@ -22,7 +22,10 @@ namespace AuthenticationService.Business.Validation
         public static readonly Error InvalidId = new Error("User.InvalidId", "Id must be greater than zero.", HttpStatus.BadRequest);
         public static readonly Error InvalidRoleId = new Error("User.InvalidRoleId", "RoleId must be greater than zero.", HttpStatus.BadRequest);
         public static readonly Error InvalidStatusId = new Error("User.InvalidStatusId", "StatusId must be greater than zero.", HttpStatus.BadRequest);
+    
+        public static readonly Error InvalidRefreshToken = new Error("Token.InvalidRefreshToken", "Refresh token is invalid.", HttpStatus.Unauthorized);
     }
+
     public class AuthenticationValidator
     {
         static Result ValidateUsername(string? username)
@@ -46,6 +49,20 @@ namespace AuthenticationService.Business.Validation
 
             if (!ValidationHelper.IsLengthBetween(password, 8, 255))
                 return Result.Failure(UserValidatorErrors.InvalidPasswordLength);
+
+            return Result.Success();
+        }
+
+        public static Result ValidateRefreshToken(RefreshTokenDto? refreshToken)
+        {
+            if (refreshToken == null)
+                return Result<LoginResponseDto>.Failure(AuthenticationValidatorErrors.InvalidRefreshToken);
+
+            if (refreshToken.RevokedAt.HasValue)
+                return Result<LoginResponseDto>.Failure(AuthenticationValidatorErrors.InvalidRefreshToken);
+
+            if (refreshToken.ExpiresAt <= DateTime.UtcNow)
+                return Result<LoginResponseDto>.Failure(AuthenticationValidatorErrors.InvalidRefreshToken);
 
             return Result.Success();
         }

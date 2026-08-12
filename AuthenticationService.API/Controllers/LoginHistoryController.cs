@@ -1,16 +1,19 @@
 ﻿using AuthenticationService.Business;
 using AuthenticationService.Dtos.AuditLogs;
 using AuthenticationService.Dtos.LoginHistory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 namespace AuthenticationService.API.Controllers
 {
-    [Route("api/LoginHistory")]
+    [Authorize]
     [ApiController]
+    [Route("api/LoginHistory")]
     public class LoginHistoryController : ControllerBase
     {
         [HttpGet("{id}", Name = "GetLoginHistoryByID")]
+        [Authorize(Policy = "LoginHistory.Read")]
         [ProducesResponseType(typeof(LoginHistoryDetailsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
@@ -34,6 +37,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "LoginHistory.Read")]
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -59,6 +63,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("User/{userId}")]
+        [Authorize(Policy = "LoginHistory.Read")]
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -80,6 +85,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Search")]
+        [Authorize(Policy = "LoginHistory.Read")]
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -101,6 +107,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Status/{status}")]
+        [Authorize(Policy = "LoginHistory.Read")]
         [ProducesResponseType(typeof(List<LoginHistoryDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

@@ -1,20 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AuthenticationService.Business;
 using AuthenticationService.Dtos.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthenticationService.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/Users")]
     public class UsersController : ControllerBase
     {
         [HttpPost(Name = "AddUser")]
+        [Authorize(Policy = "Users.Create")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> AddAsync(CreateUserDto user)
+        public async Task<ActionResult<int>> AddAsync([FromBody] CreateUserDto user)
         {
             try
             {
@@ -23,7 +26,7 @@ namespace AuthenticationService.API.Controllers
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
 
-                return CreatedAtAction("GetUserByID", result.Data);
+                return CreatedAtRoute("GetByIDAsync", new { id = result.Data }, new { id = result.Data });
             }
             catch (Exception ex)
             {
@@ -32,6 +35,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateUserByID")]
+        [Authorize(Policy = "Users.Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
@@ -55,6 +59,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteUserByID")]
+        [Authorize(Policy = "Users.Delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
@@ -80,6 +85,7 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<UserDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Policy = "Users.Read")]
         public async Task<ActionResult<List<UserDetailsDto>>> SearchAsync(string searchText)
         {
             try
@@ -101,6 +107,7 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<UserDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Policy = "Users.Read")]
         public async Task<ActionResult<List<UserDetailsDto>>> FilterByRoleIDAsync(int roleId)
         {
             try
@@ -119,6 +126,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Filter/Status/{statusId}")]
+        [Authorize(Policy = "Users.Read")]
         [ProducesResponseType(typeof(List<UserDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -143,6 +151,7 @@ namespace AuthenticationService.API.Controllers
         [ProducesResponseType(typeof(List<UserDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Policy = "Users.Read")]
         public async Task<ActionResult<List<UserDetailsDto>>> GetAllAsync()
         {
             try
@@ -160,8 +169,10 @@ namespace AuthenticationService.API.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetUserByID")]
-        [ProducesResponseType(typeof(List<UserDetailsDto>), StatusCodes.Status200OK)]
+        [HttpGet("{id}", Name = "GetByIDAsync")]
+        [Authorize(Policy = "Users.Read")]
+        [Authorize(Policy = "Ownership")]
+        [ProducesResponseType(typeof(UserDetailsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

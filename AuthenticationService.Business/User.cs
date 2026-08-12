@@ -29,6 +29,8 @@ namespace AuthenticationService.Business
         {
             var validationResult = UserValidator.ValidateCreate(user);
             if (!validationResult.IsSuccess) return new Result<int>(validationResult);
+            
+            user.Password = Utilities.Utilities.HashPassword(user.Password);
 
             if (await UsernameExistsAsync(user.Username)) return Result<int>.Failure(UserErrors.UsernameAlreadyExists);
             if (await EmailExistsAsync(user.Email)) return Result<int>.Failure(UserErrors.EmailAlreadyExists);

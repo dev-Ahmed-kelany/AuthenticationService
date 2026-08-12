@@ -6,18 +6,11 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Dtos.Authentication
 {
-    public class AuthenticationUserDto
+    public class TokenRequestDto
     {
-        public int ID { get; set; }
-
+        public int UserId { get; set; }
         public string Username { get; set; } = null!;
-
-        public string PasswordHash { get; set; } = null!;
-
         public string RoleName { get; set; } = null!;
-
         public long PermissionsMask { get; set; }
-
-        public int StatusID { get; set; }
     }
 }

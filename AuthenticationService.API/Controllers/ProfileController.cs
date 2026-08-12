@@ -1,14 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AuthenticationService.Business;
 using AuthenticationService.Dtos.Profile;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthenticationService.API.Controllers
 {
-    [Route("api/profile")]
+    [Authorize]
     [ApiController]
+    [Route("api/profile")]
     public class ProfileController : ControllerBase
     {
         [HttpGet("{id}", Name = "GetProfileByUserID")]
+        [Authorize(Policy = "Profile.Read")]
+        [Authorize(Policy = "Ownership")]
         [ProducesResponseType(typeof(List<ProfileDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]

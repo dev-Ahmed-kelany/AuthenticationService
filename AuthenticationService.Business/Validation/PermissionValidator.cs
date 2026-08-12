@@ -12,7 +12,7 @@ namespace AuthenticationService.Business.Validation
 
     public class PermissionValidator
     {
-        static Result ValidateName(string? name)
+        public static Result ValidateName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return Result.Failure(PermissionValidatorErrors.RequiredName);

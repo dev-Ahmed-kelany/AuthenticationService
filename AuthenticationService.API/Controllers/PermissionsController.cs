@@ -1,17 +1,17 @@
-﻿using AuthenticationService.Business;
-using AuthenticationService.Dtos.AuditLogs;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthenticationService.Business;
+using Microsoft.AspNetCore.Authorization;
 using AuthenticationService.Dtos.Permissions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
-using System.Security;
 
 namespace AuthenticationService.API.Controllers
 {
-    [Route("api/Permissions")]
+    [Authorize]
     [ApiController]
+    [Route("api/Permissions")]
     public class PermissionsController : ControllerBase
     {
         [HttpPost(Name = "AddPermission")]
+        [Authorize(Policy = "Permissions.Create")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
@@ -25,7 +25,7 @@ namespace AuthenticationService.API.Controllers
                 if (!result.IsSuccess)
                     return StatusCode(result.Error.StatusCode, new { Code = result.Error.Code, Message = result.Error.Description });
 
-                return CreatedAtAction("GetPermissionByID", result.Data);
+                return CreatedAtRoute("GetByIDAsync", new { id = result.Data }, new { id = result.Data });
             }
             catch (Exception ex)
             {
@@ -34,6 +34,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdatePermissionByID")]
+        [Authorize(Policy = "Permissions.Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
@@ -57,6 +58,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet("Search")]
+        [Authorize(Policy = "Permissions.Read")]
         [ProducesResponseType(typeof(List<PermissionDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -77,8 +79,9 @@ namespace AuthenticationService.API.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetPermissionByID")]
-        [ProducesResponseType(typeof(List<PermissionDetailsDto>), StatusCodes.Status200OK)]
+        [HttpGet("{id}", Name = "GetPermissionsByIDAsync")]
+        [Authorize(Policy = "Permissions.Read")]
+        [ProducesResponseType(typeof(PermissionDetailsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -100,6 +103,7 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Permissions.Read")]
         [ProducesResponseType(typeof(List<PermissionDetailsDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

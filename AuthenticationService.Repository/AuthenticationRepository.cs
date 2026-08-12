@@ -1,6 +1,7 @@
-﻿using System.Data;
+﻿using AuthenticationService.Dtos.Authentication;
+using AuthenticationService.Dtos.Users;
 using Microsoft.Data.SqlClient;
-using AuthenticationService.Dtos.Authentication;
+using System.Data;
 
 namespace AuthenticationService.Repository
 {
@@ -27,13 +28,46 @@ namespace AuthenticationService.Repository
                                 ID = (int)reader["ID"],
                                 Username = (string)reader["Username"],
                                 PasswordHash = (string)reader["PasswordHash"],
-                                RoleID = (int)reader["RoleID"],
+                                RoleName = (string)reader["RoleName"],
+                                PermissionsMask = (long)reader["PermissionsMask"],
                                 StatusID = (int)reader["StatusID"]
                             };
                                 
                         }
                     }
                     
+                }
+            }
+
+            return null;
+        }
+
+        public static async Task<AuthenticatedUserDto?> GetAuthenticatedUserByIDAsync(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(Settings.ConnectionString))
+            {
+                using (SqlCommand command = new SqlCommand("SP_GetAuthenticatedUserByID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@UserID", id);
+
+                    await connection.OpenAsync();
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new AuthenticatedUserDto
+                            {
+                                ID = (int)reader["ID"],
+                                Username = (string)reader["Username"],
+                                RoleName = (string)reader["RoleName"],
+                                PermissionsMask = (long)reader["PermissionsMask"],
+                                StatusID = (int)reader["StatusID"]
+                            };
+                        }
+                    }
                 }
             }
 
