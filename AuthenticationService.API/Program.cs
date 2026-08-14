@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure connection String
 Settings.ConnectionString =
-    builder.Configuration.GetConnectionString("DevelopingConnection")!;
+    builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 Settings.SecretKey = builder.Configuration["AuthenticationService_JWT_SECRET_KEY"] ?? "";
 
@@ -210,7 +210,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new()
     {
         Title = "Authentication Service API",
-        Version = "v1",
+        Version = "v2",
         Description = "Authentication & Authorization Service",
         Contact = new()
         {
