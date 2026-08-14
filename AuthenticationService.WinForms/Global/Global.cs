@@ -1,14 +1,9 @@
-﻿using AuthenticationService.WinForms.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AuthenticationService.Dtos.Users;
 
 namespace AuthenticationService.WinForms.Global
 {
     internal class Global
     {
-        public static UserDTO? CurrentUser = null; 
+        public static UserDetailsDto? CurrentUser = null; 
     }
 }

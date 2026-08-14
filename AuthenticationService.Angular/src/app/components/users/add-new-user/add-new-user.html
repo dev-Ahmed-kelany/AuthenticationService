@@ -1,0 +1,149 @@
+<!-- Dialog Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4 py-6">
+  <!-- Dialog -->
+  <div
+    class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-5">
+      <div>
+        <h2 class="text-xl font-semibold text-slate-900">Add New User</h2>
+
+        <p class="mt-1 text-sm text-slate-500">Create a new user account.</p>
+      </div>
+
+      <!-- Close -->
+      <button
+        type="button"
+        (click)="close()"
+        class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 6l12 12
+               M18 6L6 18"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <!-- Name -->
+        <div class="md:col-span-2">
+          <label for="name" class="mb-2 block text-sm font-medium text-slate-700">
+            Full Name
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            [(ngModel)]="name"
+            placeholder="Enter full name"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+
+        <!-- Username -->
+        <div>
+          <label for="username" class="mb-2 block text-sm font-medium text-slate-700">
+            Username
+          </label>
+
+          <input
+            id="username"
+            type="text"
+            [(ngModel)]="username"
+            placeholder="Enter username"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="mb-2 block text-sm font-medium text-slate-700"> Email </label>
+
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            placeholder="Enter email address"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="mb-2 block text-sm font-medium text-slate-700">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            [(ngModel)]="password"
+            placeholder="Enter password"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+
+        <!-- Role -->
+        <div>
+          <label for="role" class="mb-2 block text-sm font-medium text-slate-700"> Role </label>
+
+          <select
+            id="role"
+            [(ngModel)]="roleId"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+            <option [ngValue]="null">Select Role</option>
+
+            <!-- Roles will be loaded from API later -->
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label for="status" class="mb-2 block text-sm font-medium text-slate-700"> Status </label>
+
+          <select
+            id="status"
+            [(ngModel)]="statusId"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+            <option [ngValue]="null">Select Status</option>
+
+            <!-- Statuses will be loaded from API later -->
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="flex flex-col-reverse gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4 sm:flex-row sm:justify-end"
+    >
+      <!-- Close -->
+      <button
+        type="button"
+        (click)="close()"
+        class="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+      >
+        Close
+      </button>
+
+      <!-- Add -->
+      <button
+        type="button"
+        (click)="addUser()"
+        class="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+      >
+        Add User
+      </button>
+    </div>
+  </div>
+</div>

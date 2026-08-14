@@ -2,195 +2,185 @@
 {
     partial class frmMain
     {
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem permissionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rolesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loginHistoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem auditLogToolStripMenuItem;
+        private System.Windows.Forms.Label lblWelcome;
+
+        private System.Windows.Forms.Button btnLogout;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            btnLogin = new Button();
-            msMain = new MenuStrip();
+            menuStrip = new MenuStrip();
             usersToolStripMenuItem = new ToolStripMenuItem();
-            listUsersToolStripMenuItem = new ToolStripMenuItem();
             addNewUserToolStripMenuItem = new ToolStripMenuItem();
-            userDetailsToolStripMenuItem = new ToolStripMenuItem();
+            usersListToolStripMenuItem = new ToolStripMenuItem();
             permissionsToolStripMenuItem = new ToolStripMenuItem();
-            listPermissionsToolStripMenuItem = new ToolStripMenuItem();
             addNewPermissionToolStripMenuItem = new ToolStripMenuItem();
+            permissionsListToolStripMenuItem = new ToolStripMenuItem();
             rolesToolStripMenuItem = new ToolStripMenuItem();
-            listRolesToolStripMenuItem = new ToolStripMenuItem();
             addNewRoleToolStripMenuItem = new ToolStripMenuItem();
-            roleDetailsToolStripMenuItem = new ToolStripMenuItem();
+            rolesListToolStripMenuItem = new ToolStripMenuItem();
             loginHistoryToolStripMenuItem = new ToolStripMenuItem();
             auditLogToolStripMenuItem = new ToolStripMenuItem();
-            msMain.SuspendLayout();
+            lblWelcome = new Label();
+            btnLogout = new Button();
+            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
-            // btnLogin
+            // menuStrip
             // 
-            btnLogin.AutoSize = true;
-            btnLogin.Font = new Font("Times New Roman", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnLogin.Location = new Point(977, 517);
-            btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(150, 46);
-            btnLogin.TabIndex = 5;
-            btnLogin.Text = "Logout";
-            btnLogin.UseVisualStyleBackColor = true;
-            btnLogin.Click += btnLogin_Click;
-            // 
-            // msMain
-            // 
-            msMain.Font = new Font("Times New Roman", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            msMain.Items.AddRange(new ToolStripItem[] { usersToolStripMenuItem, permissionsToolStripMenuItem, rolesToolStripMenuItem, loginHistoryToolStripMenuItem, auditLogToolStripMenuItem });
-            msMain.Location = new Point(0, 0);
-            msMain.Name = "msMain";
-            msMain.Size = new Size(1139, 44);
-            msMain.TabIndex = 6;
-            msMain.Text = "menuStrip1";
+            menuStrip.BackColor = Color.FromArgb(245, 247, 250);
+            menuStrip.Font = new Font("Segoe UI", 10F);
+            menuStrip.Items.AddRange(new ToolStripItem[] { usersToolStripMenuItem, permissionsToolStripMenuItem, rolesToolStripMenuItem, loginHistoryToolStripMenuItem, auditLogToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(1100, 27);
+            menuStrip.TabIndex = 3;
             // 
             // usersToolStripMenuItem
             // 
-            usersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { listUsersToolStripMenuItem, addNewUserToolStripMenuItem, userDetailsToolStripMenuItem });
+            usersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addNewUserToolStripMenuItem, usersListToolStripMenuItem });
             usersToolStripMenuItem.Name = "usersToolStripMenuItem";
-            usersToolStripMenuItem.Size = new Size(102, 40);
+            usersToolStripMenuItem.Size = new Size(55, 23);
             usersToolStripMenuItem.Text = "Users";
-            // 
-            // listUsersToolStripMenuItem
-            // 
-            listUsersToolStripMenuItem.Name = "listUsersToolStripMenuItem";
-            listUsersToolStripMenuItem.Size = new Size(288, 40);
-            listUsersToolStripMenuItem.Text = "List Users";
-            listUsersToolStripMenuItem.Click += listUsersToolStripMenuItem_Click;
             // 
             // addNewUserToolStripMenuItem
             // 
             addNewUserToolStripMenuItem.Name = "addNewUserToolStripMenuItem";
-            addNewUserToolStripMenuItem.Size = new Size(288, 40);
+            addNewUserToolStripMenuItem.Size = new Size(166, 24);
             addNewUserToolStripMenuItem.Text = "Add New User";
-            addNewUserToolStripMenuItem.Click += addNewUserToolStripMenuItem_Click;
             // 
-            // userDetailsToolStripMenuItem
+            // usersListToolStripMenuItem
             // 
-            userDetailsToolStripMenuItem.Name = "userDetailsToolStripMenuItem";
-            userDetailsToolStripMenuItem.Size = new Size(288, 40);
-            userDetailsToolStripMenuItem.Text = "User Details";
-            userDetailsToolStripMenuItem.Click += userDetailsToolStripMenuItem_Click;
+            usersListToolStripMenuItem.Name = "usersListToolStripMenuItem";
+            usersListToolStripMenuItem.Size = new Size(166, 24);
+            usersListToolStripMenuItem.Text = "Users List";
+            usersListToolStripMenuItem.Click += usersListToolStripMenuItem_Click;
             // 
             // permissionsToolStripMenuItem
             // 
-            permissionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { listPermissionsToolStripMenuItem, addNewPermissionToolStripMenuItem });
+            permissionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addNewPermissionToolStripMenuItem, permissionsListToolStripMenuItem });
             permissionsToolStripMenuItem.Name = "permissionsToolStripMenuItem";
-            permissionsToolStripMenuItem.Size = new Size(190, 40);
+            permissionsToolStripMenuItem.Size = new Size(92, 23);
             permissionsToolStripMenuItem.Text = "Permissions";
-            // 
-            // listPermissionsToolStripMenuItem
-            // 
-            listPermissionsToolStripMenuItem.Name = "listPermissionsToolStripMenuItem";
-            listPermissionsToolStripMenuItem.Size = new Size(376, 40);
-            listPermissionsToolStripMenuItem.Text = "List Permissions";
-            listPermissionsToolStripMenuItem.Click += listPermissionsToolStripMenuItem_Click;
             // 
             // addNewPermissionToolStripMenuItem
             // 
             addNewPermissionToolStripMenuItem.Name = "addNewPermissionToolStripMenuItem";
-            addNewPermissionToolStripMenuItem.Size = new Size(376, 40);
+            addNewPermissionToolStripMenuItem.Size = new Size(203, 24);
             addNewPermissionToolStripMenuItem.Text = "Add New Permission";
-            addNewPermissionToolStripMenuItem.Click += addNewPermissionToolStripMenuItem_Click;
+            // 
+            // permissionsListToolStripMenuItem
+            // 
+            permissionsListToolStripMenuItem.Name = "permissionsListToolStripMenuItem";
+            permissionsListToolStripMenuItem.Size = new Size(203, 24);
+            permissionsListToolStripMenuItem.Text = "Permissions List";
+            permissionsListToolStripMenuItem.Click += permissionsListToolStripMenuItem_Click;
             // 
             // rolesToolStripMenuItem
             // 
-            rolesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { listRolesToolStripMenuItem, addNewRoleToolStripMenuItem, roleDetailsToolStripMenuItem });
+            rolesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addNewRoleToolStripMenuItem, rolesListToolStripMenuItem });
             rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
-            rolesToolStripMenuItem.Size = new Size(101, 40);
+            rolesToolStripMenuItem.Size = new Size(53, 23);
             rolesToolStripMenuItem.Text = "Roles";
-            // 
-            // listRolesToolStripMenuItem
-            // 
-            listRolesToolStripMenuItem.Name = "listRolesToolStripMenuItem";
-            listRolesToolStripMenuItem.Size = new Size(287, 40);
-            listRolesToolStripMenuItem.Text = "List Roles";
-            listRolesToolStripMenuItem.Click += listRolesToolStripMenuItem_Click;
             // 
             // addNewRoleToolStripMenuItem
             // 
             addNewRoleToolStripMenuItem.Name = "addNewRoleToolStripMenuItem";
-            addNewRoleToolStripMenuItem.Size = new Size(287, 40);
+            addNewRoleToolStripMenuItem.Size = new Size(180, 24);
             addNewRoleToolStripMenuItem.Text = "Add New Role";
-            addNewRoleToolStripMenuItem.Click += addNewRoleToolStripMenuItem_Click;
             // 
-            // roleDetailsToolStripMenuItem
+            // rolesListToolStripMenuItem
             // 
-            roleDetailsToolStripMenuItem.Name = "roleDetailsToolStripMenuItem";
-            roleDetailsToolStripMenuItem.Size = new Size(287, 40);
-            roleDetailsToolStripMenuItem.Text = "Role Details";
-            roleDetailsToolStripMenuItem.Click += roleDetailsToolStripMenuItem_Click;
+            rolesListToolStripMenuItem.Name = "rolesListToolStripMenuItem";
+            rolesListToolStripMenuItem.Size = new Size(180, 24);
+            rolesListToolStripMenuItem.Text = "Roles List";
+            rolesListToolStripMenuItem.Click += rolesListToolStripMenuItem_Click;
             // 
             // loginHistoryToolStripMenuItem
             // 
             loginHistoryToolStripMenuItem.Name = "loginHistoryToolStripMenuItem";
-            loginHistoryToolStripMenuItem.Size = new Size(209, 40);
-            loginHistoryToolStripMenuItem.Text = "LoginHistory";
+            loginHistoryToolStripMenuItem.Size = new Size(103, 23);
+            loginHistoryToolStripMenuItem.Text = "Login History";
             loginHistoryToolStripMenuItem.Click += loginHistoryToolStripMenuItem_Click;
             // 
             // auditLogToolStripMenuItem
             // 
             auditLogToolStripMenuItem.Name = "auditLogToolStripMenuItem";
-            auditLogToolStripMenuItem.Size = new Size(159, 40);
-            auditLogToolStripMenuItem.Text = "AuditLog";
+            auditLogToolStripMenuItem.Size = new Size(81, 23);
+            auditLogToolStripMenuItem.Text = "Audit Log";
             auditLogToolStripMenuItem.Click += auditLogToolStripMenuItem_Click;
+            // 
+            // lblWelcome
+            // 
+            lblWelcome.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
+            lblWelcome.ForeColor = Color.FromArgb(30, 41, 59);
+            lblWelcome.Location = new Point(80, 130);
+            lblWelcome.Name = "lblWelcome";
+            lblWelcome.Size = new Size(700, 45);
+            lblWelcome.TabIndex = 0;
+            lblWelcome.Text = "Welcome to Authentication Service";
+            // 
+            // btnLogout
+            // 
+            btnLogout.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnLogout.BackColor = Color.White;
+            btnLogout.Cursor = Cursors.Hand;
+            btnLogout.FlatAppearance.BorderColor = Color.FromArgb(185, 28, 28);
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnLogout.ForeColor = Color.FromArgb(185, 28, 28);
+            btnLogout.Location = new Point(950, 570);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(120, 45);
+            btnLogout.TabIndex = 2;
+            btnLogout.Text = "Logout";
+            btnLogout.UseVisualStyleBackColor = false;
+            btnLogout.Click += btnLogout_Click;
             // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1139, 575);
-            Controls.Add(btnLogin);
-            Controls.Add(msMain);
-            MainMenuStrip = msMain;
+            BackColor = Color.White;
+            ClientSize = new Size(1100, 650);
+            Controls.Add(lblWelcome);
+            Controls.Add(btnLogout);
+            Controls.Add(menuStrip);
+            MainMenuStrip = menuStrip;
+            MinimumSize = new Size(900, 550);
             Name = "frmMain";
-            Text = "Main";
-            Load += frmMain_Load;
-            msMain.ResumeLayout(false);
-            msMain.PerformLayout();
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Authentication Service";
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private Button btnLogin;
-        private MenuStrip msMain;
-        private ToolStripMenuItem usersToolStripMenuItem;
-        private ToolStripMenuItem listUsersToolStripMenuItem;
+
         private ToolStripMenuItem addNewUserToolStripMenuItem;
-        private ToolStripMenuItem permissionsToolStripMenuItem;
-        private ToolStripMenuItem rolesToolStripMenuItem;
-        private ToolStripMenuItem loginHistoryToolStripMenuItem;
-        private ToolStripMenuItem auditLogToolStripMenuItem;
-        private ToolStripMenuItem listPermissionsToolStripMenuItem;
+        private ToolStripMenuItem usersListToolStripMenuItem;
         private ToolStripMenuItem addNewPermissionToolStripMenuItem;
-        private ToolStripMenuItem listRolesToolStripMenuItem;
+        private ToolStripMenuItem permissionsListToolStripMenuItem;
         private ToolStripMenuItem addNewRoleToolStripMenuItem;
-        private ToolStripMenuItem userDetailsToolStripMenuItem;
-        private ToolStripMenuItem roleDetailsToolStripMenuItem;
+        private ToolStripMenuItem rolesListToolStripMenuItem;
     }
 }

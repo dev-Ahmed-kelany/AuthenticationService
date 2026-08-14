@@ -1,0 +1,7 @@
+export interface UpdateUserModel {
+  name: string;
+  username: string;
+  email: string;
+  roleId: number;
+  statusId: number;
+}

@@ -1,1 +1,208 @@
-<p>audit-logs works!</p>
+<div class="space-y-6">
+  <!-- Page Header -->
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">Audit Logs</h1>
+
+    <p class="mt-1 text-sm text-slate-500">
+      Review system operations and security-related activities.
+    </p>
+  </div>
+
+  <!-- Filters -->
+  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
+      <!-- Search -->
+      <div class="md:col-span-4">
+        <label for="search" class="mb-2 block text-sm font-medium text-slate-700"> Search </label>
+
+        <div class="relative">
+          <div
+            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-4.35-4.35
+                   M19 11a8 8 0 11-16 0
+                   8 8 0 0116 0z"
+              />
+            </svg>
+          </div>
+
+          <input
+            id="search"
+            type="text"
+            [(ngModel)]="searchText"
+            (keyup.enter)="searchAuditLogs()"
+            placeholder="Search audit logs..."
+            class="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+      </div>
+
+      <!-- Search Button -->
+      <div class="flex items-end md:col-span-2">
+        <button
+          type="button"
+          (click)="searchAuditLogs()"
+          class="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Search
+        </button>
+      </div>
+
+      <!-- User ID -->
+      <div class="md:col-span-2">
+        <label for="userId" class="mb-2 block text-sm font-medium text-slate-700"> User ID </label>
+
+        <input
+          id="userId"
+          type="number"
+          [(ngModel)]="selectedUserId"
+          placeholder="User ID"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        />
+      </div>
+
+      <!-- Entity -->
+      <div class="md:col-span-2">
+        <label for="entity" class="mb-2 block text-sm font-medium text-slate-700"> Entity </label>
+
+        <select
+          id="entity"
+          [(ngModel)]="selectedEntityId"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        >
+          <option [ngValue]="null">All Entities</option>
+
+          <!-- Entities will be loaded from API later -->
+        </select>
+      </div>
+
+      <!-- Operation Type -->
+      <div class="md:col-span-2">
+        <label for="operationType" class="mb-2 block text-sm font-medium text-slate-700">
+          Operation
+        </label>
+
+        <select
+          id="operationType"
+          [(ngModel)]="selectedOperationTypeId"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        >
+          <option [ngValue]="null">All Operations</option>
+
+          <!-- Operation types will be loaded from API later -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Logs Table -->
+  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <!-- Table Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div>
+        <h2 class="text-base font-semibold text-slate-900">Audit Log Records</h2>
+
+        <p class="mt-1 text-xs text-slate-500">Recorded operations performed within the system.</p>
+      </div>
+
+      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+        {{ auditLogs.length }} Records
+      </span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead
+          class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wider text-slate-500"
+        >
+          <tr>
+            <th class="px-5 py-4 font-semibold">ID</th>
+
+            <th class="px-5 py-4 font-semibold">User ID</th>
+
+            <th class="px-5 py-4 font-semibold">Entity</th>
+
+            <th class="px-5 py-4 font-semibold">Operation</th>
+
+            <th class="px-5 py-4 font-semibold">Date & Time</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-slate-100">
+          @for (log of auditLogs; track log.id) {
+            <tr class="transition hover:bg-slate-50">
+              <!-- ID -->
+              <td class="whitespace-nowrap px-5 py-4 font-medium text-slate-700">
+                {{ log.id }}
+              </td>
+
+              <!-- User ID -->
+              <td class="whitespace-nowrap px-5 py-4 font-medium text-slate-700">
+                {{ log.userId }}
+              </td>
+
+              <!-- Entity -->
+              <td class="whitespace-nowrap px-5 py-4">
+                <span
+                  class="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"
+                >
+                  {{ log.entityName }}
+                </span>
+              </td>
+
+              <!-- Operation -->
+              <td class="whitespace-nowrap px-5 py-4">
+                <span
+                  class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
+                >
+                  {{ log.operationTypeName }}
+                </span>
+              </td>
+
+              <!-- Date -->
+              <td class="whitespace-nowrap px-5 py-4 text-slate-500">
+                {{ log.dateTime }}
+              </td>
+            </tr>
+          }
+
+          <!-- Empty State -->
+          @if (auditLogs.length === 0) {
+            <tr>
+              <td colspan="5" class="px-5 py-12 text-center">
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400"
+                >
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12h6
+                         M9 16h6
+                         M9 8h6
+                         M5 4h14a2 2 0 012 2v12
+                         a2 2 0 01-2 2H5
+                         a2 2 0 01-2-2V6
+                         a2 2 0 012-2z"
+                    />
+                  </svg>
+                </div>
+
+                <p class="mt-3 text-sm font-medium text-slate-700">No audit logs found</p>
+
+                <p class="mt-1 text-xs text-slate-400">Try changing your search or filters.</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

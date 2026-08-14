@@ -1,0 +1,83 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4 py-6">
+  <div class="w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-5">
+      <div>
+        <h2 class="text-xl font-semibold text-slate-900">Add New Role</h2>
+
+        <p class="mt-1 text-sm text-slate-500">Create a new system role.</p>
+      </div>
+
+      <button
+        type="button"
+        (click)="close()"
+        class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 6l12 12M18 6L6 18"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <div class="p-6">
+      <!-- Name -->
+      <div class="mb-5">
+        <label for="roleName" class="mb-2 block text-sm font-medium text-slate-700">
+          Role Name
+        </label>
+
+        <input
+          id="roleName"
+          type="text"
+          [(ngModel)]="name"
+          placeholder="Enter role name"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        />
+      </div>
+
+      <!-- Permissions Mask -->
+      <div>
+        <label for="permissionsMask" class="mb-2 block text-sm font-medium text-slate-700">
+          Permissions Mask
+        </label>
+
+        <input
+          id="permissionsMask"
+          type="number"
+          [(ngModel)]="permissionsMask"
+          placeholder="Enter permissions mask"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        />
+
+        <p class="mt-2 text-xs text-slate-400">
+          Permission values will be combined into the role's permissions mask.
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4">
+      <button
+        type="button"
+        (click)="close()"
+        class="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+      >
+        Close
+      </button>
+
+      <button
+        type="button"
+        (click)="addRole()"
+        class="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+      >
+        Add Role
+      </button>
+    </div>
+  </div>
+</div>

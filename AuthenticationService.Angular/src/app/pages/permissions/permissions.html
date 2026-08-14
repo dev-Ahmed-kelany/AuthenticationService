@@ -1,1 +1,250 @@
-<p>permissions works!</p>
+<div class="space-y-6">
+  <!-- Page Header -->
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Permissions</h1>
+
+      <p class="mt-1 text-sm text-slate-500">Manage system permissions and access definitions.</p>
+    </div>
+
+    <!-- Add Permission -->
+    <button
+      type="button"
+      (click)="openAddPermissionDialog()"
+      class="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16M4 12h16"
+        />
+      </svg>
+
+      <span>Add New Permission</span>
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <div class="relative flex-1">
+        <div
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-4.35-4.35
+                 M19 11a8 8 0 11-16 0
+                 8 8 0 0116 0z"
+            />
+          </svg>
+        </div>
+
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup.enter)="searchPermissions()"
+          placeholder="Search permission by name..."
+          class="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        />
+      </div>
+
+      <button
+        type="button"
+        (click)="searchPermissions()"
+        class="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+
+  <!-- Permissions Table -->
+  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <!-- Table Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div>
+        <h2 class="text-base font-semibold text-slate-900">Permissions List</h2>
+
+        <p class="mt-1 text-xs text-slate-500">
+          Available permissions in the authentication system.
+        </p>
+      </div>
+
+      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+        {{ permissions.length }} Permissions
+      </span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead
+          class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wider text-slate-500"
+        >
+          <tr>
+            <th class="px-5 py-4 font-semibold">ID</th>
+
+            <th class="px-5 py-4 font-semibold">Permission Name</th>
+
+            <th class="px-5 py-4 font-semibold">Bit Value</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-slate-100">
+          @for (permission of permissions; track permission.id) {
+            <tr
+              (contextmenu)="showContextMenu($event, permission)"
+              class="cursor-context-menu transition hover:bg-slate-50"
+            >
+              <!-- ID -->
+              <td class="whitespace-nowrap px-5 py-4 font-medium text-slate-700">
+                {{ permission.id }}
+              </td>
+
+              <!-- Name -->
+              <td class="whitespace-nowrap px-5 py-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-sm font-semibold text-blue-700"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15a3 3 0 100-6
+                           3 3 0 000 6z
+                           M19.4 15a1.7 1.7 0 01.34 1.88l-.1.18
+                           a2 2 0 01-2.74.73l-.25-.14
+                           a1.7 1.7 0 00-2.55 1.47v.29
+                           a2 2 0 01-2 2h-.2
+                           a2 2 0 01-2-2v-.29
+                           a1.7 1.7 0 00-2.55-1.47l-.25.14
+                           a2 2 0 01-2.74-.73l-.1-.18
+                           A1.7 1.7 0 014.6 15
+                           a1.7 1.7 0 00-1.6-1.7
+                           H2.7a2 2 0 01-2-2v-.6
+                           a2 2 0 012-2H3
+                           a1.7 1.7 0 001.6-1.7
+                           1.7 1.7 0 01-.34-1.88l.1-.18
+                           a2 2 0 012.74-.73l.25.14
+                           A1.7 1.7 0 009.9 6.89V6.6
+                           a2 2 0 012-2h.2a2 2 0 012 2v.29
+                           a1.7 1.7 0 002.55 1.47l.25-.14
+                           a2 2 0 012.74.73l.1.18
+                           A1.7 1.7 0 0119.4 9
+                           a1.7 1.7 0 001.6 1.7h.3
+                           a2 2 0 012 2v.6a2 2 0 01-2 2H21
+                           a1.7 1.7 0 00-1.6 1.7z"
+                      />
+                    </svg>
+                  </div>
+
+                  <span class="font-medium text-slate-900">
+                    {{ permission.name }}
+                  </span>
+                </div>
+              </td>
+
+              <!-- Bit Value -->
+              <td class="whitespace-nowrap px-5 py-4">
+                <span
+                  class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
+                >
+                  {{ permission.bitValue }}
+                </span>
+              </td>
+            </tr>
+          }
+
+          <!-- Empty State -->
+          @if (permissions.length === 0) {
+            <tr>
+              <td colspan="3" class="px-5 py-12 text-center">
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400"
+                >
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15a3 3 0 100-6
+                         3 3 0 000 6z
+                         M19.4 15a1.7 1.7 0 01.34 1.88
+                         l-.1.18a2 2 0 01-2.74.73
+                         l-.25-.14a1.7 1.7 0 00-2.55 1.47v.29
+                         a2 2 0 01-2 2h-.2a2 2 0 01-2-2v-.29
+                         a1.7 1.7 0 00-2.55-1.47l-.25.14
+                         a2 2 0 01-2.74-.73l-.1-.18
+                         A1.7 1.7 0 014.6 15
+                         a1.7 1.7 0 00-1.6-1.7H2.7
+                         a2 2 0 01-2-2v-.6a2 2 0 012-2H3
+                         a1.7 1.7 0 001.6-1.7
+                         1.7 1.7 0 01-.34-1.88l.1-.18
+                         a2 2 0 012.74-.73l.25.14
+                         A1.7 1.7 0 009.9 6.89V6.6
+                         a2 2 0 012-2h.2a2 2 0 012 2v.29
+                         a1.7 1.7 0 002.55 1.47l.25-.14
+                         a2 2 0 012.74.73l.1.18
+                         A1.7 1.7 0 0119.4 9
+                         a1.7 1.7 0 001.6 1.7h.3
+                         a2 2 0 012 2v.6a2 2 0 01-2 2H21
+                         a1.7 1.7 0 00-1.6 1.7z"
+                    />
+                  </svg>
+                </div>
+
+                <p class="mt-3 text-sm font-medium text-slate-700">No permissions found</p>
+
+                <p class="mt-1 text-xs text-slate-400">Try changing your search.</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  @if (contextMenuVisible) {
+    <div
+      class="fixed z-50 w-44 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl"
+      [style.left.px]="contextMenuX"
+      [style.top.px]="contextMenuY"
+    >
+      <!-- Edit -->
+      <button
+        type="button"
+        (click)="editPermission()"
+        class="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-amber-50 hover:text-amber-700"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 5H6
+               a2 2 0 00-2 2v11
+               a2 2 0 002 2h11
+               a2 2 0 002-2v-5
+               M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1
+               1-4 9.5-9.5z"
+          />
+        </svg>
+
+        <span>Edit</span>
+      </button>
+    </div>
+  }
+
+  @if (showAddPermissionDialog) {
+    <app-add-new-permission (closed)="closeAddPermissionDialog()"></app-add-new-permission>
+  }
+</div>

@@ -48,13 +48,13 @@ namespace AuthenticationService.Business
             var authenticationResult = await AuthenticateUserAsync(request);
             if (!authenticationResult.IsSuccess)
             {
-                var failureLoginHistory = new CreateLoginHistoryDto
-                {
-                    UserID = authenticationResult.Data.ID,
-                    Status = 0,
-                    FailureReason = authenticationResult.Error.Description.ToString()
-                };
-                await LoginHistory.AddAsync(failureLoginHistory);
+                //var failureLoginHistory = new CreateLoginHistoryDto
+                //{
+                //    UserID = authenticationResult.Data.ID,
+                //    Status = 0,
+                //    FailureReason = authenticationResult.Error.Description.ToString()
+                //};
+                //await LoginHistory.AddAsync(failureLoginHistory);
 
                 return new Result<LoginResponseDto>(authenticationResult);
             }

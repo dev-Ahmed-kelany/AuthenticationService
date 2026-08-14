@@ -1,1 +1,293 @@
-<p>users works!</p>
+<div class="space-y-6">
+  <!-- Page Header -->
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Users</h1>
+
+      <p class="mt-1 text-sm text-slate-500">Manage system users and their access.</p>
+    </div>
+
+    <!-- Add User -->
+    <button
+      type="button"
+      (click)="openAddUserDialog()"
+      class="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16
+             M4 12h16"
+        />
+      </svg>
+
+      <span>Add New User</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+      <!-- Search -->
+      <div class="lg:col-span-5">
+        <label for="search" class="mb-2 block text-sm font-medium text-slate-700">
+          Search User
+        </label>
+
+        <div class="relative">
+          <div
+            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-4.35-4.35
+                   M19 11a8 8 0 11-16 0
+                   8 8 0 0116 0z"
+              />
+            </svg>
+          </div>
+
+          <input
+            id="search"
+            type="text"
+            [(ngModel)]="searchText"
+            (ngModelChange)="onSearchTextChanged($event)"
+            placeholder="Search by name, username or email..."
+            class="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+      </div>
+
+      <!-- Search Button -->
+      <div class="flex items-end lg:col-span-2">
+        <button
+          type="button"
+          (click)="searchUsers()"
+          class="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Search
+        </button>
+      </div>
+
+      <!-- Role Filter -->
+      <div class="lg:col-span-2">
+        <label for="role" class="mb-2 block text-sm font-medium text-slate-700"> Role </label>
+
+        <select
+          id="role"
+          [(ngModel)]="selectedRoleId"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        >
+          <option [ngValue]="null">All Roles</option>
+
+          <!-- Roles will be loaded from API later -->
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="lg:col-span-3">
+        <label for="status" class="mb-2 block text-sm font-medium text-slate-700"> Status </label>
+
+        <select
+          id="status"
+          [(ngModel)]="selectedStatusId"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        >
+          <option [ngValue]="null">All Statuses</option>
+
+          <!-- Statuses will be loaded from API later -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <!-- Table Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div>
+        <h2 class="text-base font-semibold text-slate-900">Users List</h2>
+
+        <p class="mt-1 text-xs text-slate-500">System users and account information.</p>
+      </div>
+
+      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+        {{ users.length }} Users
+      </span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead
+          class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wider text-slate-500"
+        >
+          <tr>
+            <th class="px-5 py-4 font-semibold">ID</th>
+
+            <th class="px-5 py-4 font-semibold">Name</th>
+
+            <th class="px-5 py-4 font-semibold">Username</th>
+
+            <th class="px-5 py-4 font-semibold">Email</th>
+
+            <th class="px-5 py-4 font-semibold">Role</th>
+
+            <th class="px-5 py-4 font-semibold">Status</th>
+
+            <th class="px-5 py-4 font-semibold">Created At</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-slate-100">
+          @for (user of users; track user.id) {
+            <tr
+              (contextmenu)="showContextMenu($event, user)"
+              class="cursor-context-menu transition hover:bg-slate-50"
+            >
+              <td class="whitespace-nowrap px-5 py-4 font-medium text-slate-700">
+                {{ user.id }}
+              </td>
+
+              <td class="whitespace-nowrap px-5 py-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700"
+                  >
+                    {{ getInitials(user.name) }}
+                  </div>
+
+                  <span class="font-medium text-slate-900">
+                    {{ user.name }}
+                  </span>
+                </div>
+              </td>
+
+              <td class="whitespace-nowrap px-5 py-4 text-slate-600">
+                {{ user.username }}
+              </td>
+
+              <td class="whitespace-nowrap px-5 py-4 text-slate-600">
+                {{ user.email }}
+              </td>
+
+              <td class="whitespace-nowrap px-5 py-4">
+                <span
+                  class="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"
+                >
+                  {{ user.roleId }}
+                </span>
+              </td>
+
+              <td class="whitespace-nowrap px-5 py-4">
+                <span
+                  class="inline-flex rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700"
+                >
+                  {{ user.statusId }}
+                </span>
+              </td>
+
+              <td class="whitespace-nowrap px-5 py-4 text-slate-500">
+                {{ user.createdAt }}
+              </td>
+            </tr>
+          }
+
+          <!-- Empty State -->
+          @if (users.length === 0) {
+            <tr>
+              <td colspan="7" class="px-5 py-12 text-center">
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400"
+                >
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2
+                         a4 4 0 00-4-4h-1
+                         M9 20H4v-2
+                         a4 4 0 014-4h1
+                         M12 12a4 4 0 100-8
+                         4 4 0 000 8z"
+                    />
+                  </svg>
+                </div>
+
+                <p class="mt-3 text-sm font-medium text-slate-700">No users found</p>
+
+                <p class="mt-1 text-xs text-slate-400">Try changing your search or filters.</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  @if (contextMenuVisible) {
+    <div
+      class="fixed z-50 w-44 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl"
+      [style.left.px]="contextMenuX"
+      [style.top.px]="contextMenuY"
+    >
+      <!-- Edit -->
+      <button
+        type="button"
+        (click)="editUser()"
+        class="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-amber-50 hover:text-amber-700"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 5H6
+               a2 2 0 00-2 2v11
+               a2 2 0 002 2h11
+               a2 2 0 002-2v-5
+               M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1
+               1-4 9.5-9.5z"
+          />
+        </svg>
+
+        <span>Edit</span>
+      </button>
+
+      <!-- Delete -->
+      <button
+        type="button"
+        (click)="deleteUser()"
+        class="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50 hover:text-red-700"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 7h12
+               M9 7V4h6v3
+               M8 7v13
+               M16 7v13
+               M5 7h14
+               M9 11v5
+               M15 11v5"
+          />
+        </svg>
+
+        <span>Delete</span>
+      </button>
+    </div>
+  }
+
+  @if (showAddUserDialog) {
+    <app-add-new-user (closed)="closeAddUserDialog()"> </app-add-new-user>
+  }
+</div>

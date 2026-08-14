@@ -1,12 +1,10 @@
-using AuthenticationService.WinForms.Models;
-using AuthenticationService.WinForms.API;
-using AuthenticationService.WinForms.Login;
-using AuthenticationService.WinForms.Global;
 using AuthenticationService.WinForms.Users;
-using AuthenticationService.WinForms.Permissions;
 using AuthenticationService.WinForms.Roles;
+using AuthenticationService.WinForms.Permissions;
 using AuthenticationService.WinForms.LoginHistory;
 using AuthenticationService.WinForms.AuditLogs;
+using AuthenticationService.WinForms.Login;
+using AuthenticationService.WinForms.Global;
 
 namespace AuthenticationService.WinForms
 {
@@ -19,92 +17,71 @@ namespace AuthenticationService.WinForms
             InitializeComponent();
         }
 
-        public frmMain(frmLogin Login)
+        public frmMain(frmLogin login)
         {
             InitializeComponent();
-
-            _Login = Login;
+            _Login = login;
         }
 
-        private void frmMain_Load(object sender, EventArgs e)
+        private void loginHistoryToolStripMenuItem_Click(
+            object? sender,
+            EventArgs e)
         {
+            frmLoginHistoryList frm = new frmLoginHistoryList();
 
+            frm.ShowDialog();
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void auditLogToolStripMenuItem_Click(
+            object? sender,
+            EventArgs e)
         {
-            this.Hide();
+            frmAuditLogsList frm = new frmAuditLogsList();
+
+            frm.ShowDialog();
+        }
+
+        private void btnLogout_Click(
+            object? sender,
+            EventArgs e)
+        {
+            DialogResult result =
+                MessageBox.Show(
+                    "Are you sure you want to logout?",
+                    "Logout",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+            if (result != DialogResult.Yes)
+                return;
+
+            // Clear session here.
+            //
+            Session.Clear();
             _Login.Show();
+            this.Close();
         }
 
-        private void listUsersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void usersListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmUsersList UsersList = new frmUsersList();
+            frmUsersList frm = new frmUsersList();
 
-            UsersList.Show();
+            frm.ShowDialog();
         }
 
-        private void addNewUserToolStripMenuItem_Click(object sender, EventArgs e)
+        private void permissionsListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmAddEditUser AddUser = new frmAddEditUser();
+            frmPermissionsList frm = new frmPermissionsList();
 
-            AddUser.Show();
+            frm.ShowDialog();
         }
 
-        private void userDetailsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void rolesListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmUserDetails UserDetails = new frmUserDetails();
+            frmRolesList frm = new frmRolesList();
 
-            UserDetails.Show();
-        }
-
-        private void listPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmPermissionsList PermissionsList = new frmPermissionsList();
-
-            PermissionsList.Show();
-        }
-
-        private void addNewPermissionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmAddEditPermission AddPermission = new frmAddEditPermission();
-
-            AddPermission.Show();
-        }
-
-        private void listRolesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmRolesList RolesList = new frmRolesList();
-
-            RolesList.Show();
-        }
-
-        private void addNewRoleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmAddEditRole AddRole = new frmAddEditRole();
-
-            AddRole.Show();
-        }
-
-        private void roleDetailsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmRoleDetails RoleDetails = new frmRoleDetails();
-
-            RoleDetails.Show();
-        }
-
-        private void loginHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmLoginHistoryList LoginHistoryList = new frmLoginHistoryList();
-
-            LoginHistoryList.Show();
-        }
-
-        private void auditLogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmAuditLogsList AuditLogsList = new frmAuditLogsList();
-
-            AuditLogsList.Show();
+            frm.ShowDialog();
         }
     }
 }

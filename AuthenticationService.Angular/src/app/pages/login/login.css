@@ -1,21 +1,332 @@
-.login-container {
-  width: 350px;
+/* ================================
+   Login Page
+   ================================ */
 
-  margin: 100px auto;
+.login-page {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #e5e7eb;
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #374151;
+
+  box-sizing: border-box;
+}
+
+/* ================================
+   Main Window
+   ================================ */
+
+.login-window {
+  width: 900px;
+  height: 568px;
+
+  display: grid;
+  grid-template-columns: 288px 1fr;
+  grid-template-rows: 30px 1fr 22px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #d1d5db;
+
+  overflow: hidden;
+}
+
+/* ================================
+   Left Branding Panel
+   ================================ */
+
+.branding-panel {
+  grid-column: 1;
+  grid-row: 2 / 3;
+
+  position: relative;
+
+  padding: 0 36px;
 
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  justify-content: center;
+
+  background-color: #f3f4f6;
+
+  box-sizing: border-box;
 }
 
-input {
-  padding: 10px;
+/* Blue accent */
 
-  font-size: 16px;
+.accent-line {
+  width: 32px;
+  height: 3px;
+
+  margin-bottom: 18px;
+
+  background-color: #2563eb;
 }
 
-button {
-  padding: 10px;
+/* Application name */
+
+.branding-panel h1 {
+  margin: 0;
+
+  color: #1e3a5f;
+
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+/* Description */
+
+.branding-panel .description {
+  margin: 14px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Separator */
+
+.separator {
+  width: 100%;
+  height: 1px;
+
+  margin: 34px 0 14px;
+
+  background-color: #d1d5db;
+}
+
+/* Secondary information */
+
+.internal-use,
+.version {
+  margin: 0;
+
+  color: #9ca3af;
+
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+/* ================================
+   Right Login Panel
+   ================================ */
+
+.login-panel {
+  grid-column: 2;
+  grid-row: 2 / 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #ffffff;
+
+  box-sizing: border-box;
+}
+
+/* ================================
+   Login Form
+   ================================ */
+
+.login-form {
+  width: 300px;
+}
+
+/* Heading */
+
+.login-form h2 {
+  margin: 0;
+
+  color: #1e3a5f;
+
+  font-size: 27px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Subtitle */
+
+.subtitle {
+  margin: 8px 0 40px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* ================================
+   Form Groups
+   ================================ */
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ================================
+   Inputs
+   ================================ */
+
+.form-group input {
+  width: 100%;
+  height: 38px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 2px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  color: #374151;
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.form-group input:hover {
+  border-color: #9ca3af;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+
+  background-color: #f9fafb;
+}
+
+/* ================================
+   Login Button
+   ================================ */
+
+.login-button {
+  width: 100%;
+  height: 40px;
+
+  margin-top: 2px;
+
+  border: none;
+  border-radius: 2px;
+
+  background-color: #2563eb;
+
+  color: #ffffff;
+
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
+
+  transition: background-color 0.15s ease;
+}
+
+.login-button:hover {
+  background-color: #1d4ed8;
+}
+
+.login-button:active {
+  background-color: #1e40af;
+}
+
+.login-button:disabled {
+  background-color: #9ca3af;
+
+  cursor: not-allowed;
+}
+
+/* ================================
+   Error Message
+   ================================ */
+
+.error-message {
+  margin-top: 14px;
+
+  color: #dc2626;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ================================
+   Title Bar
+   ================================ */
+
+.login-window::before {
+  content: 'Authentication Service';
+
+  grid-column: 1 / 3;
+  grid-row: 1;
+
+  display: flex;
+  align-items: center;
+
+  padding-left: 10px;
+
+  background-color: #1e3a5f;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 400;
+
+  box-sizing: border-box;
+}
+
+/* ================================
+   Status Bar
+   ================================ */
+
+.status-bar {
+  grid-column: 1 / 3;
+  grid-row: 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 10px;
+
+  background-color: #f3f4f6;
+
+  color: #6b7280;
+
+  font-size: 11px;
+
+  box-sizing: border-box;
+}
+
+.status {
+  color: #6b7280;
+}
+
+.application-name {
+  color: #9ca3af;
 }
